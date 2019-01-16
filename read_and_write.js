@@ -2,6 +2,7 @@
 // need to import your code 
 
 const fs = require('fs')
+const read_monitor = require('./read_monitor.js')
 // const assert = require('assert')
 const file = 'r.txt'
 const mode = 'r'
@@ -10,7 +11,8 @@ const w_mode = 'w'
 var ww_fd;
 var rr_fd;
 var r_response = '';
-var r_monitor =null 
+var r_monitor = null 
+var r_interval = 40000
 // l_f_d_args
 // listener developer function args
 // l_f_g_args
@@ -189,81 +191,7 @@ fs.open(file,mode,(err,fd) =>{
 					})
 				})					
 				var r_counter  = 0
-				r_monitor =setInterval(function(){
-
-
-						if(r_stream.readableFlowing != undefined){
-
-
-							if(!r_stream.readableFlowing){
-
-
-								console.log('flowing',r_stream.readableFlowing)
-								r_stream.resume()
-
-
-							}	
-
-
-						}
-
-
-						if(r_counter >= 3){
-
-
-							console.log('this is taking too long I"ll attempt to close the stream')
-
-
-							if(r_stream.isPaused()){
-
-
-								r_stream.resume()
-								r_counter = 1
-
-
-
-							}
-
-
-							else{
-
-								r_stream.emit('error')
-								r_stream.close();
-
-							
-
-							}
-
-
-						}
-
-
-						if(r_couter >= 5){
-
-							r_stream.emit('error')
-							r_stream.push(null);	
-							r_stream.read(0);
-
-
-						}
-						
-
-
-						if(r_counter >= 7){
-
-
-							console.log('were forced to destroy the stream, they should make a method for ending streams')
-							r_stream.destroy()
-
-
-						}
-
-
-						r_counter += 1
-
-
-
-				},40000)
+				r_monitor = read_monitor(r_stream,r_counter,r_interval)
 				console.log('readable stream intializaed')
 				setImmediate(() =>{
 					r_stream.pipe(w_stream,{end:false})					
