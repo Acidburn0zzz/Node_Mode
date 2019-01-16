@@ -1,4 +1,4 @@
-		module.exports =function(r_stream,r_counter,r_interval = 40000){
+		module.exports =function(r_stream,r_counter =0,r_interval = 40000){
 			return  setInterval(function(){
 
 

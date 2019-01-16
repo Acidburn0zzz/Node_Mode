@@ -13,22 +13,26 @@ var rr_fd;
 var r_response = '';
 var r_monitor = null 
 var r_interval = 40000
+var r_counter  = 0
 // l_f_d_args
 // listener developer function args
 // l_f_g_args
 // listener function generated args
 const async_listener = function(listener_function,l_f_d_args){						
-					   return function(l_f_g_args){
+					   return function(){
 								setImmediate(()=>{
-									listener_function(l_f_g_args,this)
+									listener_function(Array.from(arguments),this)
 								})
 						}
 }		
 
-const reading_file = async_listener(function(chunk,stream_object){
+
+
+const reading_file = async_listener(function(){
 				// r_response += chunk
-				console.log(chunk)
-				console.log(stream_object.readableLength)				
+				console.log(arguments.length)
+				console.log(arguments[0])
+				console.log(arguments[1].readableLength)				
 })
 
 
@@ -189,8 +193,7 @@ fs.open(file,mode,(err,fd) =>{
 					setImmediate(() =>{
 						console.log("looks like the fd was closed by the stream ")
 					})
-				})					
-				var r_counter  = 0
+				})									
 				r_monitor = read_monitor(r_stream,r_counter,r_interval)
 				console.log('readable stream intializaed')
 				setImmediate(() =>{
