@@ -1,20 +1,35 @@
+//need drain meechanism
+// need to import your code 
+
 const fs = require('fs')
 // const assert = require('assert')
-const file = 'readable.txt'
+const file = 'r.txt'
 const mode = 'r'
-const w_file = "./w.txt"
+const w_file = "w.txt"
 const w_mode = 'w'
 var ww_fd;
 var rr_fd;
 var r_response = '';
 var r_monitor =null 
+// l_f_d_args
+// listener developer function args
+// l_f_g_args
+// listener function generated args
+const async_listener = function(listener_function,l_f_d_args){						
+					   return function(l_f_g_args){
+								setImmediate(()=>{
+									listener_function(l_f_g_args,this)
+								})
+						}
+}		
 
-const reading_file =function(chunk){
-			setImmediate(() => {
-				r_response += chunk
-				console.log(r_response,this.readableLength)
-			})	
-		}
+const reading_file = async_listener(function(chunk,stream_object){
+				// r_response += chunk
+				console.log(chunk)
+				console.log(stream_object.readableLength)				
+})
+
+
 
 
 async function close_file(c_fd,name =undefined,r_w = undefined){
@@ -135,7 +150,7 @@ fs.open(file,mode,(err,fd) =>{
 		              autoClose:false		              
 		        })		
 		        w_stream.setDefaultEncoding('utf8')
-				w_stream.on('error', B);
+				w_stream.on('error', B);				
 		        w_stream.on('finish',()=>{
 		          setImmediate(() => {
 		              console.log('All writes are now complete. writestream closed');
@@ -163,7 +178,7 @@ fs.open(file,mode,(err,fd) =>{
 				r_stream.on('end',()=>{
 					setImmediate(() => {
 						console.log('nothing more to read closing  readstream')
-						console.log(r_response)
+						// console.log(r_response)
 						w_stream.end()
 						close_file(rr_fd,'read_file',file)
 					})
