@@ -4,8 +4,8 @@
 const fs = require('fs')
 const read_monitor = require('./read_monitor.js')
 // const assert = require('assert')
-const file = 'r.txt'
-const mode = 'r'
+const r_file = 'r.txt'
+const r_mode = 'r'
 const w_file = "w.txt"
 const w_mode = 'w'
 var ww_fd;
@@ -30,6 +30,7 @@ const async_listener = function(listener_function,l_f_d_args){
 
 const reading_file = async_listener(function(){
 				// r_response += chunk
+				console.log('arg amount below')
 				console.log(arguments.length)
 				console.log(arguments[0])
 				console.log(arguments[1].readableLength)				
@@ -38,7 +39,7 @@ const reading_file = async_listener(function(){
 
 
 
-async function close_file(c_fd,name =undefined,r_w = undefined){
+async function close_file(c_fd,c_name =undefined,r_w = undefined){
 
 		console.log(r_w)
 
@@ -66,11 +67,11 @@ async function close_file(c_fd,name =undefined,r_w = undefined){
 			}
 
 
-			else if(name != undefined){
+			else if(c_name != undefined){
 
 
-				console.log(r_w,name)
-				console.log('if itclosed the '+ name +'is closed now')
+				console.log(r_w,c_name)
+				console.log('if itclosed the file '+ c_name +' is closed now')
 
 
 
@@ -117,13 +118,13 @@ const C = function(err){
 }
 
 
-fs.open(file,mode,(err,fd) =>{
+fs.open(r_file,r_mode,(r_err,r_fd) =>{
 
 
-	if(err){
+	if(r_err){
 
 
-		throw(err)
+		throw(r_err)
 
 
 	}
@@ -131,7 +132,7 @@ fs.open(file,mode,(err,fd) =>{
 
 	else{
 
-		rr_fd = fd;
+		rr_fd = r_fd;
 		console.log('read file opened')
 		fs.open(w_file,w_mode,(w_err,w_fd) =>{
 
@@ -172,11 +173,11 @@ fs.open(file,mode,(err,fd) =>{
 				  console.error('Something has stopped piping into the writer.');
 				  // assert.equal(src, r_stream);
 				});		               
-		        console.log('writable stream intializaed')						
-				const r_stream = fs.createReadStream(file,{
+		        console.log('writable stream intializaed')					
+				const r_stream = fs.createReadStream(r_file,{
 					start:126,
 					end:2237,
-					fd:fd,	
+					fd:rr_fd,	
 					autoClose:false	
 				})
 				r_stream.on('data',reading_file)
@@ -186,7 +187,7 @@ fs.open(file,mode,(err,fd) =>{
 						console.log('nothing more to read closing  readstream')
 						// console.log(r_response)
 						w_stream.end()
-						close_file(rr_fd,'read_file',file)
+						close_file(rr_fd,'read_file',r_file)
 					})
 				})			
 				r_stream.on('close',()=>{
