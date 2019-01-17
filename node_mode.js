@@ -1,15 +1,14 @@
 const node_mode_EventEmitter = require('events');
 class node_mode_Emitter extends node_mode_EventEmitter {}
-const node_mode_emitter = new node_mode_Emitter();
 const node_mode_async_listener = require('./async_listener.js')
-const node_mode_a_l = node_mode_async_listener()
+
 // n_m
 	// safe basic way of doing things no problems
 	//implement expermenting with sucessful code to make it work nicely with system, the desired mode
 	//  unknown new methods but unknown results
 	// ,danger code that works but there are setbacks
 	// prevent, when you dont want that area in your api to run
-		//reimplemeted
+		//reimplemeted so you can use it how you like
 	// make this an emitter so it can run more smoothly and handle sync and async code
 
 //codes
@@ -20,60 +19,50 @@ const node_mode_a_l = node_mode_async_listener()
 	// one get an emitter containing the given node_mode	
 	// some you wont use all the node_modes but still want options
 
+//updates
+	//make so that you can add arguments needed for this to work properly so the dev
+	// can declare the emitter and make their code much neater, without just seeing the one times
+	// where all the required args came into existence
+	// also make so you can pop out and put back in at will
+	// should be attached to a const so you can move the listeners around
+	//make a debug mode	
 
-module.exports = function(n_m = 'safe',codes,needs = 'whole'){
 
-						if(node_mode_needs == 'whole'){
+module.exports = function(n_m = 'safe',codes,node_mode_needs = 'whole'){
+
+						const node_mode_emitter = new node_mode_Emitter();
+						const node_mode_a_l = node_mode_async_listener()
+						if(node_mode_needs == 'whole' && Array.isArray(codes)){
 
 
-							node_mode_emitter.on('safe',       node_mode_a_l(codes[0]))
-							node_mode_emitter.on('unknown',    node_mode_a_l(codes[1]))
-							node_mode_emitter.on('implement',  node_mode_a_l(codes[2]))
-							node_mode_emitter.on('danger',     node_mode_a_l(codes[3]))
-							node_mode_emitter.on('prevent',    node_mode_a_l(codes[4]))
+							node_mode_emitter.on('safe',       node_mode_a_l(codes[0],'safe emitted'))
+							node_mode_emitter.on('unknown',    node_mode_a_l(codes[1],'unknown emitted'))
+							node_mode_emitter.on('implement',  node_mode_a_l(codes[2],'implement emitted'))
+							node_mode_emitter.on('danger',     node_mode_a_l(codes[3],'danger emitted'))
+							node_mode_emitter.on('prevent',    node_mode_a_l(codes[4],'prevent emitted'))
+
+							// node_mode_emitter.on('safe',       codes[0])
+							// node_mode_emitter.on('unknown',    codes[1])
+							// node_mode_emitter.on('implement',  codes[2])
+							// node_mode_emitter.on('danger',     codes[3])
+							// node_mode_emitter.on('prevent',    codes[4])							
 							return node_mode_emitter
 
 
 						}
 
-
 						
-						async function node_mode_handler(mode_number){
+						else if(node_mode_needs == 'whole' && typeof(codes) == 'object'){
 
-							if(!isNaN(mode_number)){
+							//make this so that it can make events based on object property names
+							node_mode_emitter.on('safe',       codes.safe   )            
+							node_mode_emitter.on('unknown',    codes.unknown   )
+							node_mode_emitter.on('implement',  codes.implement   )
+							node_mode_emitter.on('danger',     codes.danger   )
+							node_mode_emitter.on('prevent',    codes.prevent   )
+							return node_mode_emitter
 
-
-								if(typeof(codes[mode_number]) == "function"){
-
-
-									return codes[mode_number]
-
-
-								}
-
-
-								else{
-
-									return async function(){
-											console.log("didnt get a function change the node name or put a function in the appropriate spot in the array?")
-											console.log("for the first arg type 'safe' ")
-										}
-
-								}
-
-
-							}
-
-							
-							else if(mode_number == 'prevent'){
-
-									return async function(){
-										}								
-
-							}							
-
-
-						}
+						}						
 
 
 						else if(node_mode_needs == 'spec'){
@@ -84,5 +73,11 @@ module.exports = function(n_m = 'safe',codes,needs = 'whole'){
 
 
 						}
+
+
+						else if(node_mode_needs == 'some'){
+							//make this so that it can make events based on object property names
+						}
 					
 			}
+

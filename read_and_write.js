@@ -1,4 +1,5 @@
 const fs = require('fs')
+const events = require('events')
 const read_monitor = require('./read_monitor.js')
 const async_listener = require('./async_listener.js')
 const node_mode = require('./node_mode.js')
@@ -27,10 +28,10 @@ var r_counter  = 0
 
 
 const reading_file = a_l(function(){
-				w_script_info[0] = JSON.stringify(arguments[2][0],circular_replacer())
+				w_script_info[0] =   JSON.stringify(arguments,circular_replacer())
 				// JSON.stringify(arguments,circular_replacer())
 				console.log('arg amount below')
-				console.log(arguments)
+				// console.log(arguments)
 				console.log(arguments.length)
 				console.log(arguments[0])
 				console.log(arguments[1].readableLength)		
@@ -191,17 +192,23 @@ fs.open(r_file,r_mode,(r_err,r_fd) =>{
 					autoClose:false	
 				})
 				r_stream.on('data',reading_file)
+				const w_stream_last =node_mode('safe',[
+										function(){
+											// console.log('do i exist here',w_script_info[0])
+											w_stream.end(w_script_info[0])
+										}
+										,function(){
+											w_stream.end()
+										}								
+									])				
 				r_stream.on('error', C);
 				r_stream.on('end',()=>{
 					setImmediate(() => {
 						console.log('nothing more to read closing  readstream')	
-						w_stream.write(w_script_info[0])
-						w_stream.end()											
-						console.log(node_mode('safe',[
-											async function(){
-												w_stream.end(w_script_info[0])
-											}								
-										]))	
+						w_stream.write('gunna write some info')
+						console.log(w_stream_last._events.safe.toString())
+						w_stream_last.emit('safe')
+						console.log(w_script_info[0])																	
 						close_file(rr_fd,'read_file',r_file)
 					})
 				})			
@@ -212,17 +219,18 @@ fs.open(r_file,r_mode,(r_err,r_fd) =>{
 				})									
 				r_monitor = read_monitor(r_stream,r_counter,r_interval)
 				console.log('readable stream intializaed')
-				node_mode('prevent',[
-										async function(){
-											setImmediate(() =>{
-												r_stream.pipe(w_stream,{end:false})					
-											})
-										},		
-										async function(){
-											a_l(function(){r_stream.pipe(w_stream,{end:false})})()
-										}	
-									])	
-													
+				// var pipe_emitter =node_mode('prevent',[
+				// 						function(){
+				// 							setImmediate(() =>{
+				// 								r_stream.pipe(w_stream,{end:false})					
+				// 							})
+				// 						},		
+				// 						function(){
+				// 							a_l(function(){r_stream.pipe(w_stream,{end:false})})()
+				// 						}	
+				// 					])	
+										
+				// console.log(pipe_emitter)			
 			}
 
 
