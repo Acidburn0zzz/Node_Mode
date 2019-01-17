@@ -1,8 +1,8 @@
-//need drain meechanism
-// need to import your code 
-
 const fs = require('fs')
 const read_monitor = require('./read_monitor.js')
+const async_listener = require('./async_listener.js')
+const node_mode = require('./node_mode.js')
+const a_l = async_listener()
 // const assert = require('assert')
 const r_file = 'r.txt'
 const r_mode = 'r'
@@ -14,26 +14,31 @@ var r_response = '';
 var r_monitor = null 
 var r_interval = 40000
 var r_counter  = 0
-// l_f_d_args
-// listener developer function args
-// l_f_g_args
-// listener function generated args
-const async_listener = function(listener_function,l_f_d_args){						
-					   return function(){
-								setImmediate(()=>{
-									listener_function(Array.from(arguments),this)
-								})
-						}
-}		
+
+// safe basic way of doing things no problems
+//implement expermenting with sucessful code to make it work nicely with system, the desired mode
+//  unknown new methods but unknown results
+// ,danger code that works but there are setbacks
 
 
 
-const reading_file = async_listener(function(){
+const reading_file = a_l(function(){
 				// r_response += chunk
 				console.log('arg amount below')
+				console.log(arguments)
 				console.log(arguments.length)
 				console.log(arguments[0])
-				console.log(arguments[1].readableLength)				
+				console.log(arguments[1].readableLength)		
+				console.log(arguments[1].readableBuffer)		
+},[1,2,3,4,5])
+
+const r_e_r = a_l(function(){
+				  let r_e_r_chunk;
+				  var r_e_r_size = 1000
+				  var readable = arguments[1]  
+				  while (null !== (chunk = readable.read(r_e_r_size))) {
+				    	console.log(`Received ${chunk.length} bytes of data.\n this is from the 'readable' event - read() implementation`);
+				  }
 })
 
 
@@ -197,13 +202,17 @@ fs.open(r_file,r_mode,(r_err,r_fd) =>{
 				})									
 				r_monitor = read_monitor(r_stream,r_counter,r_interval)
 				console.log('readable stream intializaed')
-				setImmediate(() =>{
-					r_stream.pipe(w_stream,{end:false})					
-				})
-
-
-
-							
+				node_mode('unknown',[
+										async function(){
+											setImmediate(() =>{
+												r_stream.pipe(w_stream,{end:false})					
+											})
+										},		
+										async function(){
+											a_l(function(){r_stream.pipe(w_stream,{end:false})})()
+										}	
+									])	
+													
 			}
 
 
