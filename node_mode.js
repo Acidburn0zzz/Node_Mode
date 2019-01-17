@@ -14,10 +14,14 @@ const node_mode_async_listener = require('./async_listener.js')
 //codes
 	// respective desired code to be executed
 
-//needs
+//node_mode_needs
 	//whole get whole event emitter containing your codes to make the node_mode dynamic
 	// one get an emitter containing the given node_mode	
 	// some you wont use all the node_modes but still want options
+
+//node_mode_async
+	//false, the emitter provides sync functionality
+	// true, the function are wrapped so they can be made async, tell developers to give the function as a regular one
 
 //updates
 	//make so that you can add arguments needed for this to work properly so the dev
@@ -26,13 +30,14 @@ const node_mode_async_listener = require('./async_listener.js')
 	// also make so you can pop out and put back in at will
 	// should be attached to a const so you can move the listeners around
 	//make a debug mode	
+	// if there is an error, undo the last event and emit the next event
 
 
-module.exports = function(n_m = 'safe',codes,node_mode_needs = 'whole'){
+module.exports = function(n_m = 'safe',codes,node_mode_needs = 'whole',node_mode_async = true){
 
 						const node_mode_emitter = new node_mode_Emitter();
 						const node_mode_a_l = node_mode_async_listener()
-						if(node_mode_needs == 'whole' && Array.isArray(codes)){
+						if(node_mode_needs == 'whole' && Array.isArray(codes) && node_mode_async){
 
 
 							node_mode_emitter.on('safe',       node_mode_a_l(codes[0],'safe emitted'))

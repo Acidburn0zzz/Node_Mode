@@ -14,18 +14,23 @@ var ww_fd;
 var rr_fd;
 var r_response = ''; // for the writable if it needs to be held here
 var w_script_info =[];     //important information developer needs in a file and is using a writeStream to do it 
-
+var piping = true
+var unpiped_stream; // helps the ReadStream pipe and unpipe the Writestream, this eventually sets the writeStream
 var r_monitor = null 
 var r_interval = 40000
 var r_counter  = 0
 
-// safe basic way of doing things no problems
-//implement expermenting with sucessful code to make it work nicely with system, the desired mode
-//  unknown new methods but unknown results
-// ,danger code that works but there are setbacks
+//implement use of sync and datasync to recover files
+//test the ready event for yourr listernrs
 // your modules are functions not async but i guess this is okay for now
 
 
+const toss_data = a_l(function(){
+	
+	console.log(arguments)
+	console.log('tossing data')	
+
+})
 
 const reading_file = a_l(function(){
 				w_script_info[0] =   JSON.stringify(arguments,circular_replacer())
@@ -187,14 +192,27 @@ fs.open(r_file,r_mode,(r_err,r_fd) =>{
 		        console.log('writable stream intializaed')					
 				const r_stream = fs.createReadStream(r_file,{
 					start:126,
-					end:2237,
+					// end:2237,
 					fd:rr_fd,	
 					autoClose:false	
 				})
-				r_stream.on('data',reading_file)
+				const r_stream_data_event =node_mode('safe',[
+													 function(){
+													 	r_stream.on('data',toss_data)
+													 },
+													 function(){
+													 	r_stream.on('data',reading_file)
+													 },
+													 function(){
+													 	r_stream.on('readable',r_e_r)
+													 }
+												])
 				const w_stream_last =node_mode('safe',[
 										function(){
 											// console.log('do i exist here',w_script_info[0])
+											w_stream.write('gunna write some info')
+											console.log(w_stream_last._events.safe.toString())
+											console.log(w_script_info[0])	
 											w_stream.end(w_script_info[0])
 										}
 										,function(){
@@ -204,11 +222,8 @@ fs.open(r_file,r_mode,(r_err,r_fd) =>{
 				r_stream.on('error', C);
 				r_stream.on('end',()=>{
 					setImmediate(() => {
-						console.log('nothing more to read closing  readstream')	
-						w_stream.write('gunna write some info')
-						console.log(w_stream_last._events.safe.toString())
-						w_stream_last.emit('safe')
-						console.log(w_script_info[0])																	
+						console.log('nothing more to read closing  readstream')													
+						w_stream_last.emit('unknown')																						
 						close_file(rr_fd,'read_file',r_file)
 					})
 				})			
@@ -219,18 +234,57 @@ fs.open(r_file,r_mode,(r_err,r_fd) =>{
 				})									
 				r_monitor = read_monitor(r_stream,r_counter,r_interval)
 				console.log('readable stream intializaed')
-				// var pipe_emitter =node_mode('prevent',[
-				// 						function(){
-				// 							setImmediate(() =>{
-				// 								r_stream.pipe(w_stream,{end:false})					
-				// 							})
-				// 						},		
-				// 						function(){
-				// 							a_l(function(){r_stream.pipe(w_stream,{end:false})})()
-				// 						}	
-				// 					])	
-										
-				// console.log(pipe_emitter)			
+				const pipe_emitter =node_mode('prevent',[
+										function(){											
+												unpiped_stream = r_stream.pipe(w_stream,{end:false})																
+										}
+									])											
+				pipe_emitter.emit('safe')		
+				setTimeout(() => {
+					if(r_stream.bytesRead > 100  && piping){
+						console.log(r_stream.bytesRead > 100  && piping,r_stream.bytesRead)
+						const r_stream_dest_next = node_mode('safe',[
+																function(){
+																	r_stream.unpipe(unpiped_stream)
+																	r_stream.pause()
+																},
+																function(){
+																	r_stream.on('data',toss_data)																	
+																	r_stream.unpipe(unpiped_stream)
+																}
+																,function(){
+																	console.log(r_stream._events.data.toString())
+																	r_stream_data_event.emit('safe')	
+																	console.log("r_stream.on('data',toss_data)")
+																	r_stream.unpipe(unpiped_stream)																	
+																}
+													]) 
+						r_stream_dest_next.emit('unknown')						
+						// console.log(r_stream._events.data)
+							// its unwise to place a .emit() in node_mode becuase you are absorbing the whole emitter into another emitter which
+							// has to find the right function, not confuse it with its own, because remember its async so you need
+							// const or let, to preseve to which emiiter and its event the listener assigned above belongs to
+							// just copy the code and execute
+						console.log("is the stream flowing",r_stream.readableFlowing)
+						console.log('I unpiped and paused the stream hopefully on resume I get my data back')
+						setTimeout(function(){
+							console.log('did the readstream stop with me',r_stream.bytesRead)
+							console.log('are we getting a buffer clog',r_stream.readableLength,r_stream.readableHighWaterMark)							
+							const r_stream_dest_orig = node_mode('safe',[
+																	function(){
+																		r_stream.pipe(unpiped_stream,{end:false})
+																		r_stream.resume()
+																	},
+																	function(){
+																		r_stream.off('data',toss_data)
+																		r_stream.pipe(unpiped_stream,{end:false})
+																	}
+														]) 							
+							r_stream_dest_orig.emit('unknown')	
+						},2000)	
+						piping = false
+					}	
+				},3)					
 			}
 
 
@@ -240,3 +294,5 @@ fs.open(r_file,r_mode,(r_err,r_fd) =>{
 	}
 
 })
+
+console.log('mem usage',process.memoryUsage())
