@@ -2,6 +2,7 @@ const fs = require('fs')
 const read_monitor = require('./read_monitor.js')
 const async_listener = require('./async_listener.js')
 const node_mode = require('./node_mode.js')
+const circular_replacer = require('./circular_replacer.js')
 const a_l = async_listener()
 // const assert = require('assert')
 const r_file = 'r.txt'
@@ -10,7 +11,9 @@ const w_file = "w.txt"
 const w_mode = 'w'
 var ww_fd;
 var rr_fd;
-var r_response = '';
+var r_response = ''; // for the writable if it needs to be held here
+var w_script_info =[];     //important information developer needs in a file and is using a writeStream to do it 
+
 var r_monitor = null 
 var r_interval = 40000
 var r_counter  = 0
@@ -19,11 +22,13 @@ var r_counter  = 0
 //implement expermenting with sucessful code to make it work nicely with system, the desired mode
 //  unknown new methods but unknown results
 // ,danger code that works but there are setbacks
+// your modules are functions not async but i guess this is okay for now
 
 
 
 const reading_file = a_l(function(){
-				// r_response += chunk
+				w_script_info[0] = JSON.stringify(arguments[2][0],circular_replacer())
+				// JSON.stringify(arguments,circular_replacer())
 				console.log('arg amount below')
 				console.log(arguments)
 				console.log(arguments.length)
@@ -157,7 +162,7 @@ fs.open(r_file,r_mode,(r_err,r_fd) =>{
 				ww_fd = w_fd
 				console.log('write file opened')
 		        const w_stream = fs.createWriteStream(w_file,{		              
-		              start:55,
+		              start:0,
 		              fd:ww_fd,
 		              autoClose:false		              
 		        })		
@@ -189,9 +194,14 @@ fs.open(r_file,r_mode,(r_err,r_fd) =>{
 				r_stream.on('error', C);
 				r_stream.on('end',()=>{
 					setImmediate(() => {
-						console.log('nothing more to read closing  readstream')
-						// console.log(r_response)
-						w_stream.end()
+						console.log('nothing more to read closing  readstream')	
+						w_stream.write(w_script_info[0])
+						w_stream.end()											
+						console.log(node_mode('safe',[
+											async function(){
+												w_stream.end(w_script_info[0])
+											}								
+										]))	
 						close_file(rr_fd,'read_file',r_file)
 					})
 				})			
@@ -202,7 +212,7 @@ fs.open(r_file,r_mode,(r_err,r_fd) =>{
 				})									
 				r_monitor = read_monitor(r_stream,r_counter,r_interval)
 				console.log('readable stream intializaed')
-				node_mode('unknown',[
+				node_mode('prevent',[
 										async function(){
 											setImmediate(() =>{
 												r_stream.pipe(w_stream,{end:false})					
