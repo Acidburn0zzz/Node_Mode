@@ -264,7 +264,7 @@ fs.open(r_file,r_mode,(r_err,r_fd) =>{
 							// its unwise to place a .emit() in node_mode becuase you are absorbing the whole emitter into another emitter which
 							// has to find the right function, not confuse it with its own, because remember its async so you need
 							// const or let, to preseve to which emiiter and its event the listener assigned above belongs to
-							// just copy the code and execute
+							// just copy the code and execute, how ever since the function is already made it unsure why the original function gets lost
 						console.log("is the stream flowing",r_stream.readableFlowing)
 						console.log('I unpiped and paused the stream hopefully on resume I get my data back')
 						setTimeout(function(){
