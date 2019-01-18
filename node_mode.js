@@ -35,6 +35,8 @@ const node_mode_async_listener = require('./async_listener.js')
 	// should be attached to a const so you can move the listeners around
 	//make a debug mode	
 	// if there is an error, undo the last event and emit the next event
+	// make n_m a node_mode emitter object manager, so when it sees a string associated with the event you can
+		// use event raw listeners to emit that event also might not work 
 
 
 

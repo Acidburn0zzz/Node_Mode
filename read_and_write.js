@@ -9,8 +9,12 @@ const node_mode = require(required_dir +'/node_mode.js')
 const circular_replacer = require(required_dir +'/circular_replacer.js')
 const readable_e_r_unshift = require(required_dir +'/r_e_r_unshift.js')
 const stream_finished = require(required_dir + '/stream_finished.js')
+const pipeline = require(required_dir + '/pipeline.js')
+const drain = require(required_dir + '/drain.js')
+const d_rn = drain()
 const s_f = stream_finished()
 const a_l = async_listener()
+const p_l = pipeline()
 const r_file = 'r.txt'
 const r_mode = 'r'
 const w_file = "w.txt"
@@ -190,7 +194,7 @@ fs.open(r_file,r_mode,(r_err,r_fd) =>{
       if(w_err){
 
 
-        close_file(rr_fd)       
+          close_file(rr_fd)       
 
 
       }
@@ -201,20 +205,20 @@ fs.open(r_file,r_mode,(r_err,r_fd) =>{
 
         ww_fd = w_fd
         console.log('write file opened')
-            const w_stream = fs.createWriteStream(w_file,{                  
-                  start:0,
-                  fd:ww_fd,
-                  autoClose:false                 
-            })    
-            w_stream.setDefaultEncoding('utf8')
+        const w_stream = fs.createWriteStream(w_file,{                  
+              start:0,
+              fd:ww_fd,
+              autoClose:false                 
+        })    
+        w_stream.setDefaultEncoding('utf8')
         w_stream.on('error', B);        
-            w_stream.on('finish',()=>{
-              setImmediate(() => {
-                  console.log('All writes are now complete. writestream closed');
-                  close_file(ww_fd,'write_file',w_file)
+        w_stream.on('finish',()=>{
+          setImmediate(() => {
+              console.log('All writes are now complete. writestream closed');
+              close_file(ww_fd,'write_file',w_file)
 
-              });
-            })     
+          });
+        })     
         w_stream.on('pipe', (src) => {
           console.error('something is piping into the writer');
           // assert.equal(src, r_stream);
@@ -253,29 +257,29 @@ fs.open(r_file,r_mode,(r_err,r_fd) =>{
                             }]                                                                                                          
                         ])
         const w_stream_last =node_mode('safe',[[
-                    'safe',
-                    function(){
-                      // console.log('do i exist here',w_script_info[0])
-                      w_stream.write('gunna write some info')
-                      console.log(w_stream_last._events.safe.toString())
-                      console.log(w_script_info[0]) 
-                      w_stream.end(w_script_info[0])
-                    }],
-                    ['unknown',
-                    function(){
-                      w_stream.end()
-                    }],
-                    ['stream_finished',
-                    function(){
-                      s_f(w_stream)
-                    }]               
-                  ])    
+                            'safe',
+                            function(){
+                              // console.log('do i exist here',w_script_info[0])
+                              w_stream.write('gunna write some info')
+                              console.log(w_stream_last._events.safe.toString())
+                              console.log(w_script_info[0]) 
+                              w_stream.end(w_script_info[0])
+                            }],
+                            ['unknown',
+                            function(){
+                              w_stream.end()
+                            }],
+                            ['stream_finished',
+                            function(){
+                              s_f(w_stream)
+                            }]               
+                        ])    
         w_stream_last.emit('stream_finished')              
         r_stream.on('error', C);
         r_stream.on('end',()=>{
           setImmediate(() => {
             console.log('nothing more to read closing  readstream')                         
-            w_stream_last.emit('unknown')
+            w_stream_last.emit('prevent')
             r_stream.resume(); //this helps clear the buffer                                            
             close_file(rr_fd,'read_file',r_file)
           })
@@ -285,11 +289,11 @@ fs.open(r_file,r_mode,(r_err,r_fd) =>{
             console.log("looks like the fd was closed by the stream ")
           })
         })
-        r_stream_data_event.emit('prevent')   
+        r_stream_data_event.emit('safe')   
         r_stream_data_event.emit('stream_finished')                       
         console.log('readable stream intializaed')
         const pipe_emitter =node_mode('prevent',[[
-                        'safe',
+                        'unpipe_pause',
                         function(){                     
                             unpiped_stream = r_stream.pipe(w_stream,{end:false})                                
                         }],
@@ -308,31 +312,43 @@ fs.open(r_file,r_mode,(r_err,r_fd) =>{
                             unpiped_stream = w_stream
                             dynamic_declare_i()
                             r_stream.on('readable',r_e_r_unshift)
-                        }]                   
+                        }],
+                        ['pipeline',
+                        function(){
+                            p_l(r_stream,w_stream)
+                        }],
+                        ['drain',
+                        function(){
+                            d_rn(w_stream,"copied a bunch of times")
+                        }],                        
                   ])                      
-        pipe_emitter.emit('unshift_readable')   
+        pipe_emitter.emit('drain') 
+        pipe_emitter.emit('prevent')        
         const piping_action = node_mode('prevent',[[
                         'safe',
                         function(){
                           if(r_stream.bytesRead > 100  && piping){
                             console.log(r_stream.bytesRead > 100  && piping,r_stream.bytesRead)
-                            const r_stream_dest_next = node_mode('safe',[
+                            const r_stream_dest_next = node_mode('safe',[[
+                                                'unpipe_pause',
                                                 function(){
                                                   r_stream.unpipe(unpiped_stream)
                                                   r_stream.pause()
-                                                },
+                                                }],
+                                                ['unpipe_data',
                                                 function(){
                                                   r_stream.on('data',toss_data)                                 
                                                   r_stream.unpipe(unpiped_stream)
-                                                }
-                                                ,function(){
+                                                }],
+                                                ['unpipe_data_danger',
+                                                function(){
                                                   console.log(r_stream._events.data.toString())
                                                   r_stream_data_event.emit('safe')  
                                                   console.log("r_stream.on('data',toss_data)")
                                                   r_stream.unpipe(unpiped_stream)                                 
-                                                }
+                                                }]
                                           ]) 
-                            r_stream_dest_next.emit('prevent')            
+                            r_stream_dest_next.emit('unpipe_pause')            
                             // console.log(r_stream._events.data)
                                // what happens that node_mode  is specific where, when node mode puts the functions made by 
                                // async_listener and attaches it to the ee, the technicality of ee says that it takes a function 
@@ -344,17 +360,19 @@ fs.open(r_file,r_mode,(r_err,r_fd) =>{
                             setTimeout(function(){
                               console.log('did the readstream stop with me',r_stream.bytesRead)
                               console.log('are we getting a buffer clog',r_stream.readableLength,r_stream.readableHighWaterMark)              
-                              const r_stream_dest_orig = node_mode('safe',[
+                              const r_stream_dest_orig = node_mode('safe',[[
+                                                  'unpipe_pause',
                                                   function(){
                                                     r_stream.pipe(unpiped_stream,{end:false})
                                                     r_stream.resume()
-                                                  },
+                                                  }],
+                                                  ['unpipe_data',
                                                   function(){
                                                     r_stream.off('data',toss_data)
                                                     r_stream.pipe(unpiped_stream,{end:false})
-                                                  }
+                                                  }]
                                             ])              
-                              r_stream_dest_orig.emit('prevent')  
+                              r_stream_dest_orig.emit('unpipe_pause')  
                             },2000) 
                             piping = false
                           } 
