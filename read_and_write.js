@@ -7,6 +7,7 @@ const read_monitor = require(required_dir + '/read_monitor.js')
 const async_listener = require(required_dir +'/async_listener.js')
 const node_mode = require(required_dir +'/node_mode.js')
 const circular_replacer = require(required_dir +'/circular_replacer.js')
+const readable_e_r_unshift = require(required_dir +'/r_e_r_unshift.js')
 const a_l = async_listener()
 const r_file = 'r.txt'
 const r_mode = 'r'
@@ -66,50 +67,6 @@ const r_f_unshift = a_l(function(){
 
     
 })
-
-const r_e_r_unshift = a_l(function(){
-
-
-  
-  
-    let chunk;
-    while (null !== (chunk = arguments[1].read())) {
-
-
-
-        if (chunk.indexOf('David Tallon') != -1) {
-          // console.log(chunk.toString())
-          var toss_talon = chunk.toString().split('David Tallon').join('Adam Lampls')          
-          const buf = Buffer.from(toss_talon, 'utf8');
-          arguments[1].off('error', C);
-          // remove the 'readable' listener before unshifting
-          arguments[1].off('readable', r_e_r_unshift);
-          if (buf.length){
-            console.log(buf.length)
-            arguments[1].unshift(buf);          
-          // now the body of the message can be read from the stream.          
-          }
-          arguments[1].pipe(unpiped_stream)
-
-
-        }
-
-
-        else {
-
-          // still reading the header.
-          console.log('looking for that string to unshift')
-
-
-        }        
-
-
-    }
-  
-
-})
-
-
 
 
 async function close_file(c_fd,c_name =undefined,r_w = undefined){
@@ -310,6 +267,7 @@ fs.open(r_file,r_mode,(r_err,r_fd) =>{
                         ['unshift_readable',
                         function(){
                             unpiped_stream = w_stream
+                            const r_e_r_unshift =  readable_e_r_unshift(w_stream)
                             r_stream.on('readable',r_e_r_unshift)
                         }]                   
                   ])                      
