@@ -5,6 +5,9 @@ const circular_replacer = require('./circular_replacer.js')
 // l_f_g_args
 // listener function generated args
 // if dealing with circular objects just comment appropirates
+/// l_f_a_args
+// if you like to emit with args here you go 
+	// listener function application args
 module.exports = function(){
 		return	function(listener_function){	
 							   // l_f_d_args should be an array please if we equate it to 
@@ -18,6 +21,7 @@ module.exports = function(){
 							   var l_f_d_args = arguments
 							   return function(){
 
+							   			var l_f_a_args = arguments
 							   			// console.log(l_f_d_args)
 										if(listener_function != undefined){
 
@@ -26,7 +30,7 @@ module.exports = function(){
 												// the first arg is the are l_f_g_args
 												// the developers should handle circular objects or
 												// ask for you module in l_f_d_args
-												listener_function(Array.from(arguments),this,l_f_d_args)											
+												listener_function(Array.from(arguments),this,l_f_d_args,l_f_a_args)											
 											})
 
 

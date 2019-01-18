@@ -65,6 +65,28 @@ module.exports = function(n_m = 'safe',codes,node_mode_needs = 'whole',node_mode
 						}
 
 
+						else if(Array.isArray(n_m) && node_mode_needs == 'whole' && Array.isArray(codes) && node_mode_async && typeof(codes[0][0]) == 'string' ){
+
+
+							for(var node_mode_i in codes){
+								node_mode_emitter.on(codes[node_mode_i][0]  ,node_mode_a_l(codes[node_mode_i][1],codes[node_mode_i][0] + ' emitted'))
+							}	
+		        				        			
+
+		        			for(var node_mode_ii in n_m){
+		        				node_mode_emitter.on(n_m[node_mode_ii][0], node_mode_a_l(   function(){	
+		        																	console.log(arguments[2][1])
+		        																	console.log(arguments[3][0].toString())
+		        																	// arguments[3][0].toString() is the real emiiter
+		        																	node_mode_emitter.emit(arguments[3][0].toString())		        																
+        																	},n_m[node_mode_ii][1]))
+		        			}	
+							return node_mode_emitter
+
+
+						}							
+
+
 						else if(node_mode_needs == 'whole' && Array.isArray(codes) && node_mode_async && typeof(codes[0][0]) == 'string' ){
 
 

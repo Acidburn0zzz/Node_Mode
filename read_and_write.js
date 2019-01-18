@@ -55,7 +55,7 @@ var dynamic_declare_i = function(){
 
 const toss_data = a_l(function(){
   // console.log(arguments)
-  console.log('tossing data') 
+  // console.log('tossing data') 
 })
 
 const reading_file = a_l(function(){
@@ -294,7 +294,16 @@ fs.open(r_file,r_mode,(r_err,r_fd) =>{
         r_stream_data_event.emit('safe')   
         r_stream_data_event.emit('stream_finished')                       
         console.log('readable stream intializaed')
-        const pipe_emitter =node_mode('prevent',[[
+        const pipe_emitter_n_m =  [['cork_mechanism_group',
+                                    ['cork_mechanism','more_mechanism','attach_you','to','my','emitter']
+                                  ],
+                                  ['pork',
+                                    ['cork_mechanism','more_mechanism','attach_you','to','my','emitter']
+                                  ], 
+                                  ['cyvrus',
+                                    ['cork_mechanism','more_mechanism','attach_you','to','my','emitter']
+                                  ]]  
+        const pipe_emitter =node_mode(pipe_emitter_n_m,[[
                         'unpipe_pause',
                         function(){                     
                             unpiped_stream = r_stream.pipe(w_stream,{end:false})                                
@@ -327,8 +336,9 @@ fs.open(r_file,r_mode,(r_err,r_fd) =>{
                         function(){
                             c_u(w_stream,"getting corked")
                         }],                                          
-                  ])                      
-        pipe_emitter.emit('cork_mechanism') 
+                  ])        
+        // pipe_emitter.emit('cork_mechanism')                                
+        pipe_emitter.emit('cork_mechanism_group','cork_mechanism') 
         pipe_emitter.emit('prevent')        
         const piping_action = node_mode('prevent',[[
                         'safe',
