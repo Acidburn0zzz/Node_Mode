@@ -8,6 +8,8 @@ const async_listener = require(required_dir +'/async_listener.js')
 const node_mode = require(required_dir +'/node_mode.js')
 const circular_replacer = require(required_dir +'/circular_replacer.js')
 const readable_e_r_unshift = require(required_dir +'/r_e_r_unshift.js')
+const stream_finished = require(required_dir + '/stream_finished.js')
+const s_f = stream_finished()
 const a_l = async_listener()
 const r_file = 'r.txt'
 const r_mode = 'r'
@@ -22,6 +24,23 @@ var unpiped_stream; // helps the ReadStream pipe and unpipe the Writestream, thi
 var r_monitor = null 
 var r_interval = 40000
 var r_counter  = 0
+var dynamic_declare_i = function(){
+  setInterval(()=>{
+
+
+      if(unpiped_stream != undefined){
+
+
+          const r_e_r_unshift =  readable_e_r_unshift(w_stream)
+          clearInterval(dynamic_declare_i)
+
+
+      }
+
+
+  },1)
+}
+// experimental, provides new object when needed items come into existence
 
 //implement use of sync and datasync to recover files
 //test the ready event for yourr listernrs
@@ -137,6 +156,7 @@ const B = function(err){
 const C = function(err){
             setImmediate(() => {               
                 console.log('error thrown in readStream close everything ',err) 
+                this.resume() //check to see if there are bytes in the buffer
                 this.emit('error')
                 this.close()
                 this.push(null);
@@ -202,7 +222,7 @@ fs.open(r_file,r_mode,(r_err,r_fd) =>{
         w_stream.on('unpipe', (src) => {
           console.error('Something has stopped piping into the writer.');
           // assert.equal(src, r_stream);
-        });                  
+        });                          
         console.log('writable stream intializaed')          
         const r_stream = fs.createReadStream(r_file,{
           start:0,
@@ -211,40 +231,52 @@ fs.open(r_file,r_mode,(r_err,r_fd) =>{
           autoClose:false 
         })
         const r_stream_data_event =node_mode('safe',[[
-                           'safe',
-                           function(){
-                            r_stream.on('data',toss_data)
-                           }],
-                           ['unknown',
-                           function(){
-                            r_stream.on('data',reading_file)
-                           }],
-                           ['implement',
-                           function(){
-                            r_stream.on('readable',r_e_r)
-                           }],
-                           ['monitor',
-                           function(){
-                            r_monitor = read_monitor(r_stream,r_counter,r_interval)
-                           }]                                                                              
+                            'safe',
+                            function(){
+                             r_stream.on('data',toss_data)
+                            }],
+                            ['unknown',
+                            function(){
+                             r_stream.on('data',reading_file)
+                            }],
+                            ['implement',
+                            function(){
+                             r_stream.on('readable',r_e_r)
+                            }],
+                            ['monitor',
+                            function(){
+                             r_monitor = read_monitor(r_stream,r_counter,r_interval)
+                            }],
+                            ['stream_finished',
+                            function(){
+                              s_f(r_stream)
+                            }]                                                                                                          
                         ])
-        const w_stream_last =node_mode('safe',[
+        const w_stream_last =node_mode('safe',[[
+                    'safe',
                     function(){
                       // console.log('do i exist here',w_script_info[0])
                       w_stream.write('gunna write some info')
                       console.log(w_stream_last._events.safe.toString())
                       console.log(w_script_info[0]) 
                       w_stream.end(w_script_info[0])
-                    }
-                    ,function(){
+                    }],
+                    ['unknown',
+                    function(){
                       w_stream.end()
-                    }               
-                  ])        
+                    }],
+                    ['stream_finished',
+                    function(){
+                      s_f(w_stream)
+                    }]               
+                  ])    
+        w_stream_last.emit('stream_finished')              
         r_stream.on('error', C);
         r_stream.on('end',()=>{
           setImmediate(() => {
             console.log('nothing more to read closing  readstream')                         
-            w_stream_last.emit('unknown')                                           
+            w_stream_last.emit('unknown')
+            r_stream.resume(); //this helps clear the buffer                                            
             close_file(rr_fd,'read_file',r_file)
           })
         })      
@@ -253,7 +285,8 @@ fs.open(r_file,r_mode,(r_err,r_fd) =>{
             console.log("looks like the fd was closed by the stream ")
           })
         })
-        r_stream_data_event.emit('prevent')                          
+        r_stream_data_event.emit('prevent')   
+        r_stream_data_event.emit('stream_finished')                       
         console.log('readable stream intializaed')
         const pipe_emitter =node_mode('prevent',[[
                         'safe',
@@ -267,7 +300,13 @@ fs.open(r_file,r_mode,(r_err,r_fd) =>{
                         ['unshift_readable',
                         function(){
                             unpiped_stream = w_stream
-                            const r_e_r_unshift =  readable_e_r_unshift(w_stream)
+                            const r_e_r_unshift =  readable_e_r_unshift(w_stream)                            
+                            r_stream.on('readable',r_e_r_unshift)
+                        }],
+                        ['unshift_readable_danger',
+                        function(){
+                            unpiped_stream = w_stream
+                            dynamic_declare_i()
                             r_stream.on('readable',r_e_r_unshift)
                         }]                   
                   ])                      
