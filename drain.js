@@ -9,7 +9,7 @@
 
 
 module.exports = function(){
-            return function drain_writeOneMillionTimes(drain_writer, drain_data, drain_callback) {
+            return function drain_writeOneMillionTimes(drain_writer, drain_data) {
                           //place one million to see the effect
                           let drain_i = 100;
                           drain_writing();

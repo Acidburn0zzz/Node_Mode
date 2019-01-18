@@ -56,3 +56,14 @@ to see the writable drain funnctionality
 	r_stream_dest_next.emit('')
 	r_stream_dest_orig.emit('')	
 	piping_action.emit('prevent')	
+
+to see the cork uncork mechanism
+
+	w_stream_last.emit('stream_finished') 
+	w_stream_last.emit('unknown')
+    r_stream_data_event.emit('safe')   
+    r_stream_data_event.emit('stream_finished')  	
+    pipe_emitter.emit('cork_mechanism') 
+	r_stream_dest_next.emit('')
+	r_stream_dest_orig.emit('')	    
+    pipe_emitter.emit('prevent')      	

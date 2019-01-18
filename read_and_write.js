@@ -11,6 +11,8 @@ const readable_e_r_unshift = require(required_dir +'/r_e_r_unshift.js')
 const stream_finished = require(required_dir + '/stream_finished.js')
 const pipeline = require(required_dir + '/pipeline.js')
 const drain = require(required_dir + '/drain.js')
+const cork_and_uncork = require(required_dir + '/cork_and_uncork.js')
+const c_u = cork_and_uncork()
 const d_rn = drain()
 const s_f = stream_finished()
 const a_l = async_listener()
@@ -279,7 +281,7 @@ fs.open(r_file,r_mode,(r_err,r_fd) =>{
         r_stream.on('end',()=>{
           setImmediate(() => {
             console.log('nothing more to read closing  readstream')                         
-            w_stream_last.emit('prevent')
+            w_stream_last.emit('unknown')
             r_stream.resume(); //this helps clear the buffer                                            
             close_file(rr_fd,'read_file',r_file)
           })
@@ -320,9 +322,13 @@ fs.open(r_file,r_mode,(r_err,r_fd) =>{
                         ['drain',
                         function(){
                             d_rn(w_stream,"copied a bunch of times")
-                        }],                        
+                        }],      
+                        ['cork_mechanism',
+                        function(){
+                            c_u(w_stream,"getting corked")
+                        }],                                          
                   ])                      
-        pipe_emitter.emit('drain') 
+        pipe_emitter.emit('cork_mechanism') 
         pipe_emitter.emit('prevent')        
         const piping_action = node_mode('prevent',[[
                         'safe',
