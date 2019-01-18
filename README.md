@@ -25,6 +25,8 @@ node_mode
 	but this is javascript only the name node mode, work will be implemented for all languages but for now let see how you can boost javascript
 
 	THE NODE MODE OBJECT
+
+	
 	the n_m_group
 		an extension of n_m this puts a name to a mode your code is in so when you emit
 		node_mode.emit('n_m','real_listener')
@@ -44,8 +46,13 @@ node_mode
 		]
 
 		as you can see all you threads that make your software are tied to this simple array, and with grouping concept here
-		it helps erase confusion when you need to switch the mode of your code
-		
+		it helps erase confusion when you need to switch the mode of your code, i
+
+		if you emit a n_m_group and an event that is is not part of the group array an error is thrown
+		this is to prevent you from overlook and turing your code to a dangerous mode
+
+		make sure that the real listener does not have the same name as the group name node mode is an emitter, you would have to handle that your self in
+		your own custom listeners
 
 
 dont use setTimeout or setInterval with a node_mode emitter
@@ -107,7 +114,7 @@ to see the cork uncork mechanism
 	w_stream_last.emit('unknown')
     r_stream_data_event.emit('safe')   
     r_stream_data_event.emit('stream_finished')  	
-    pipe_emitter.emit('cork_mechanism') 
+    pipe_emitter.emit('cork_mechanism_group','cork_mechanism') 
 	r_stream_dest_next.emit('')
 	r_stream_dest_orig.emit('')	    
     pipe_emitter.emit('prevent')      	

@@ -336,8 +336,7 @@ fs.open(r_file,r_mode,(r_err,r_fd) =>{
                         function(){
                             c_u(w_stream,"getting corked")
                         }],                                          
-                  ])        
-        // pipe_emitter.emit('cork_mechanism')                                
+                  ])                                     
         pipe_emitter.emit('cork_mechanism_group','cork_mechanism') 
         pipe_emitter.emit('prevent')        
         const piping_action = node_mode('prevent',[[

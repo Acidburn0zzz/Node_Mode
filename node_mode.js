@@ -77,7 +77,32 @@ module.exports = function(n_m = 'safe',codes,node_mode_needs = 'whole',node_mode
 		        				node_mode_emitter.on(n_m[node_mode_ii][0], node_mode_a_l(   function(){	
 		        																	console.log(arguments[2][1])
 		        																	console.log(arguments[3][0].toString())
-		        																	// arguments[3][0].toString() is the real emiiter
+		        																	// arguments[3][0].toString() is the real listneer
+		        																	var existing_listener = false
+		        																	for( var node_mode_iii in arguments[2][1]){
+
+
+		        																		if(arguments[3][0].toString() == arguments[2][1][node_mode_iii]){		        																		
+
+
+		        																			existing_listener = true
+
+
+		        																		} 
+
+
+		        																	}
+
+
+		        																	if(!existing_listener){
+
+
+		        																		throw new Error('Node Mode Emitter Error, you did not assign this listener to this group')
+
+
+		        																	}
+
+
 		        																	node_mode_emitter.emit(arguments[3][0].toString())		        																
         																	},n_m[node_mode_ii][1]))
 		        			}	
