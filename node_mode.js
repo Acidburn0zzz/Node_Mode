@@ -23,6 +23,10 @@ const node_mode_async_listener = require('./async_listener.js')
 	//false, the emitter provides sync functionality
 	// true, the function are wrapped so they can be made async, tell developers to give the function as a regular one
 
+// node_mode_args
+	 //must be an array try to implement with arguments
+	 // args dev wants to provide the  node_mode_emitter
+
 //updates
 	//make so that you can add arguments needed for this to work properly so the dev
 	// can declare the emitter and make their code much neater, without just seeing the one times
@@ -33,11 +37,13 @@ const node_mode_async_listener = require('./async_listener.js')
 	// if there is an error, undo the last event and emit the next event
 
 
-module.exports = function(n_m = 'safe',codes,node_mode_needs = 'whole',node_mode_async = true){
+
+
+module.exports = function(n_m = 'safe',codes,node_mode_needs = 'whole',node_mode_async = true,node_mode_args = null){
 
 						const node_mode_emitter = new node_mode_Emitter();
 						const node_mode_a_l = node_mode_async_listener()
-						if(node_mode_needs == 'whole' && Array.isArray(codes) && node_mode_async){
+						if(node_mode_needs == 'whole' && Array.isArray(codes) && node_mode_async && typeof(codes[0]) == 'function' ){
 
 
 							node_mode_emitter.on('safe',       node_mode_a_l(codes[0],'safe emitted'))
@@ -55,6 +61,19 @@ module.exports = function(n_m = 'safe',codes,node_mode_needs = 'whole',node_mode
 
 
 						}
+
+
+						else if(node_mode_needs == 'whole' && Array.isArray(codes) && node_mode_async && typeof(codes[0][0]) == 'string' ){
+
+
+							for(var node_mode_i in codes){
+
+								node_mode_emitter.on(codes[node_mode_i][0]  ,node_mode_a_l(codes[node_mode_i][1],codes[node_mode_i][0] + ' emitted'))
+							}						
+							return node_mode_emitter
+
+
+						}						
 
 						
 						else if(node_mode_needs == 'whole' && typeof(codes) == 'object'){

@@ -48,7 +48,7 @@
 						}
 
 
-						if(r_couter >= 5){
+						if(r_counter >= 5){
 
 							r_stream.emit('error')
 							r_stream.push(null);	

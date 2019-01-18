@@ -18,12 +18,12 @@ module.exports = function(){
 							   var l_f_d_args = arguments
 							   return function(){
 
-							   			console.log(l_f_d_args)
+							   			// console.log(l_f_d_args)
 										if(listener_function != undefined){
 
 
 											setImmediate(()=>{
-												// the first arh is the are l_f_g_args
+												// the first arg is the are l_f_g_args
 												// the developers should handle circular objects or
 												// ask for you module in l_f_d_args
 												listener_function(Array.from(arguments),this,l_f_d_args)											
