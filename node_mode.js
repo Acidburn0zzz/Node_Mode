@@ -68,25 +68,23 @@ module.exports = function(n_m = 'safe',codes,node_mode_needs = 'whole',node_mode
 						else if(Array.isArray(n_m) && node_mode_needs == 'whole' && Array.isArray(codes) && node_mode_async && typeof(codes[0][0]) == 'string' ){
 
 
-							for(var node_mode_i in codes){
-								node_mode_emitter.on(codes[node_mode_i][0]  ,node_mode_a_l(codes[node_mode_i][1],codes[node_mode_i][0] + ' emitted'))
-							}	
-		        				        			
-
-		        			for(var node_mode_ii in n_m){
-		        				node_mode_emitter.on(n_m[node_mode_ii][0], node_mode_a_l(   function(){	
-		        																	console.log(arguments[2][1])
-		        																	console.log(arguments[3][0].toString())
-		        																	// arguments[3][0].toString() is the real listneer
+							for(var node_mode_1_i in codes){
+								node_mode_emitter.on(codes[node_mode_1_i][0]  ,node_mode_a_l(codes[node_mode_1_i][1],codes[node_mode_1_i][0] + ' emitted'))
+							}			        				        		
+		        			for(var node_mode_2_i in n_m){
+		        				node_mode_emitter.on(n_m[node_mode_2_i][0], node_mode_a_l(   function(){	
+		        																	// console.log(arguments)
+		        																	// console.log(arguments[3][0].toString())
+		        																	// arguments[0][0].toString() is the real listneer
 		        																	var existing_listener = false
-		        																	for( var node_mode_iii in arguments[2][1]){
+		        																	for( var node_mode_3_i in arguments[2][1]){
 
 
-		        																		if(arguments[3][0].toString() == arguments[2][1][node_mode_iii]){		        																		
+		        																		if(arguments[0][0].toString() == arguments[2][1][node_mode_3_i]){		        																		
 
 
 		        																			existing_listener = true
-
+		        																			break;
 
 		        																		} 
 
@@ -97,14 +95,18 @@ module.exports = function(n_m = 'safe',codes,node_mode_needs = 'whole',node_mode
 		        																	if(!existing_listener){
 
 
-		        																		throw new Error('Node Mode Emitter Error, you did not assign this listener to this group')
+		        																		console.log('Node Mode Emitter Error, you did not assign the '+arguments[0][0].toString()+' listener to the group ' + arguments[2][2])
+		        																		// console.log(arguments)
+		        																		// throw new Error('Node Mode Emitter Error, you did not assign this listener to this group')
 
 
 		        																	}
 
 
-		        																	node_mode_emitter.emit(arguments[3][0].toString())		        																
-        																	},n_m[node_mode_ii][1]))
+
+
+		        																	node_mode_emitter.emit(arguments[0][0].toString())		        																
+        																	},n_m[node_mode_2_i][1]),n_m[node_mode_2_i][0])
 		        			}	
 							return node_mode_emitter
 
@@ -115,9 +117,8 @@ module.exports = function(n_m = 'safe',codes,node_mode_needs = 'whole',node_mode
 						else if(node_mode_needs == 'whole' && Array.isArray(codes) && node_mode_async && typeof(codes[0][0]) == 'string' ){
 
 
-							for(var node_mode_i in codes){
-
-								node_mode_emitter.on(codes[node_mode_i][0]  ,node_mode_a_l(codes[node_mode_i][1],codes[node_mode_i][0] + ' emitted'))
+							for(var node_mode_1_i in codes){
+								node_mode_emitter.on(codes[node_mode_1_i][0]  ,node_mode_a_l(codes[node_mode_1_i][1],codes[node_mode_1_i][0] + ' emitted'))
 							}						
 							return node_mode_emitter
 

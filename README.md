@@ -26,6 +26,8 @@ node_mode
 
 	THE NODE MODE OBJECT
 
+
+
 	
 	the n_m_group
 		an extension of n_m this puts a name to a mode your code is in so when you emit
@@ -41,7 +43,7 @@ node_mode
 		 	['real_listener_1','real_listener_2','real_listener_3','real_listener_4','real_listener_5'],	
 		 ],	
 		 ['n_m_group_3',
-		 	['real_listener_1','real_listener_2','real_listener_3','real_listener_4','real_listener_5'],	
+		 	['group','mechanism','attach_you','to','my','emitter']	
 		 ],			 	 
 		]
 
@@ -54,67 +56,162 @@ node_mode
 		make sure that the real listener does not have the same name as the group name node mode is an emitter, you would have to handle that your self in
 		your own custom listeners
 
+		the node_mode_threads
+		an organized way to control your threads, making it easy to change code version but placing the arguments in emiiter can work also
 
+		const node_mode_threads = [
+		                            ['cork_mechanism_group',      'stream_finished'         ],                            
+		                            ['cork_mechanism_group',      'unknown'                 ],
+		                            ['cork_mechanism_group',      'safe'                    ],
+		                            ['cork_mechanism_group',      'stream_finished'         ],
+		                            ['cork_mechanism_group',      'cork_mechanism'          ],
+		                            ['cork_mechanism_group'                    ,      ''                        ],
+		                            ['cork_mechanism_group'                    ,      ''                        ],
+		                            ['cork_mechanism_group',      'prevent'                 ],
+		                            [,''],
+		                            [,''],
+		                          ]
+
+		access like so 
+		node_mode_emitter.on(    node_mode_threads[group][0], node_mode_threads[event][1],)
+
+		make sure any node_mode_emitters added to your code update in the list!!!!!!!!!!!!!!!1
+
+replace const node_mode_threads to see actions
 dont use setTimeout or setInterval with a node_mode emitter
 current state unpipe_pause
 
 (as your read the script)
 '' - means an emit made those irrelevant leave as is 
 
-to see the unpipe_pause function 
-	w_stream_last.emit('stream_finished')
-	w_stream_last.emit('unknown')
-	r_stream_data_event.emit('prevent')
-	r_stream_data_event.emit('stream_finished')
-	pipe_emitter.emit('unpipe_pause')
-	pipe_emitter.emit('prevent')
-	r_stream_dest_next.emit('unpipe_pause')
-	r_stream_dest_orig.emit('unpipe_pause')
-	piping_action.emit('safe')      
+to see the write drain functionality
 
-to sethe unpipe_data functionality 
+const node_mode_threads = [
+                            ['drain_group',      'stream_finished'         ],                            
+                            ['drain_group',      'prevent'                 ],
+                            ['drain_group',      'safe'                    ],
+                            ['drain_group',      'stream_finished'         ],
+                            ['drain_group',      'drain'                   ],
+                            ['drain_group',      'prevent'                 ],
+                            ['drain_group',                                ],
+                            ['drain_group',                                ],
+                            ['drain_group',      'prevent'                 ],
+                            [,''],
+                            [,''],
+                          ]
 
-	w_stream_last.emit('stream_finished')
-	w_stream_last.emit('unknown')
-	r_stream_data_event.emit('prevent')
-	r_stream_data_event.emit('stream_finished')
-	pipe_emitter.emit('prevent')
-	pipe_emitter.emit('prevent')
-	r_stream_dest_next.emit('unpipe_data')
-	r_stream_dest_orig.emit('unpipe_data')
-	piping_action.emit('safe')      
+to see the pipe & pause functionlaity
 
-to see the pipeline functionality
+const node_mode_threads = [
+                            ['pipe_group',      'stream_finished'         ],                            
+                            ['pipe_group',      'unknown'                 ],
+                            ['pipe_group',      'prevent'                 ],
+                            ['pipe_group',      'stream_finished'         ],
+                            ['pipe_group',      'unpipe_pause'            ],
+                            ['pipe_group',      'prevent'                 ],
+                            ['pipe_group',      'unpipe_pause'            ],
+                            ['pipe_group',      'unpipe_pause'            ],
+                            ['pipe_group',      'safe'                    ],
+                            [,''],
+                            [,''],
+                          ]    
+
+to see the pipe & data event functionlaity         
+
+const node_mode_threads = [
+                            ['pipe_group',      'stream_finished'         ],                            
+                            ['pipe_group',      'unknown'                 ],
+                            ['pipe_group',      'prevent'                 ],
+                            ['pipe_group',      'stream_finished'         ],
+                            ['pipe_group',      'unpipe_pause'            ],
+                            ['pipe_group',      'prevent'                 ],
+                            ['pipe_group',      'unpipe_data'             ],
+                            ['pipe_group',      'unpipe_data'             ],
+                            ['pipe_group',      'safe'                    ],
+                            [,''],
+                            [,''],
+                          ]
+
+to see the readable.read readable functionality
+
+const node_mode_threads = [
+                            ['read_group',      'stream_finished'         ],                            
+                            ['read_group',      'unknown'                 ],
+                            ['read_group',      'implement'               ],
+                            ['read_group',      'stream_finished'         ],
+                            ['read_group',      'prevent'                 ],
+                            ['read_group',      'prevent'                 ],
+                            ['read_group',      ''                        ],
+                            ['read_group',      ''                        ],
+                            ['read_group',      'prevent'                 ],
+                            [,''],
+                            [,''],
+                          ]
+
+to see the  readable.pause functionaltty
+
+const node_mode_threads = [
+                            ['pause_group',      'stream_finished'         ],                            
+                            ['pause_group',      'unknown'                 ],
+                            ['pause_group',      'safe'                    ],
+                            ['pause_group',      'stream_finished'         ],
+                            ['pause_group',      'pause'                   ],
+                            ['pause_group',      'prevent'                 ],
+                            ['pause_group',      ''                        ],
+                            ['pause_group',      ''                        ],
+                            ['pause_group',      'prevent'                 ],
+                            [,''],
+                            [,''],
+                          ]
+
+to see the unshift functionality
+
+const node_mode_threads = [
+                            ['unshift_group',      'stream_finished'         ],                            
+                            ['unshift_group',      'unknown'                 ],
+                            ['unshift_group',      'prevent'                 ],
+                            ['unshift_group',      'prevent'                 ],
+                            ['unshift_group',      'unshift_readable'        ],
+                            ['unshift_group',      'prevent'                 ],
+                            ['unshift_group',      ''                        ],
+                            ['unshift_group',      ''                        ],
+                            ['unshift_group',      'prevent'                 ],
+                            [,''],
+                            [,''],
+                          ]                                                    
+to see the pipeline functionality 
+<!-- turn unpipe_pause to prevent to see it work once -->
 	
 
-	w_stream_last.emit('stream_finished')
-	w_stream_last.emit('unknown')
-	r_stream_data_event.emit('prevent')
-	r_stream_data_event.emit('stream_finished')
-	pipe_emitter.emit('prevent')
-	pipe_emitter.emit('prevent')
-	r_stream_dest_next.emit('')
-	r_stream_dest_orig.emit('')
-	piping_action.emit('prevent') 
+module.exports = [
+                            ['pipe_group',      'stream_finished'         ],                            
+                            ['pipe_group',      'unknown'                 ],
+                            ['pipe_group',      'prevent'                 ],
+                            ['pipe_group',      'stream_finished'         ],
+                            ['pipe_group',      'pipeline'                ],
+                            ['pipe_group',      'unpipe_pause'            ],
+                            ['pipe_group',      ''                        ],
+                            ['pipe_group',      ''                        ],
+                            ['pipe_group',      'prevent'                 ],
+                            [,''],
+                            [,''],
+                          ]
+                          
 
-to see the writable drain funnctionality
 
-	w_stream_last.emit('stream_finished') 
-	w_stream_last.emit('prevent')
-	r_stream_data_event.emit('safe')
-	r_stream_data_event.emit('stream_finished')
-	pipe_emitter.emit('drain') 
-	r_stream_dest_next.emit('')
-	r_stream_dest_orig.emit('')	
-	piping_action.emit('prevent')	
 
 to see the cork uncork mechanism
 
-	w_stream_last.emit('stream_finished') 
-	w_stream_last.emit('unknown')
-    r_stream_data_event.emit('safe')   
-    r_stream_data_event.emit('stream_finished')  	
-    pipe_emitter.emit('cork_mechanism_group','cork_mechanism') 
-	r_stream_dest_next.emit('')
-	r_stream_dest_orig.emit('')	    
-    pipe_emitter.emit('prevent')      	
+const node_mode_threads = [
+                            ['cork_mechanism_group',      'stream_finished'         ],                            
+                            ['cork_mechanism_group',      'unknown'                 ],
+                            ['cork_mechanism_group',      'safe'                    ],
+                            ['cork_mechanism_group',      'stream_finished'         ],
+                            ['cork_mechanism_group',      'cork_mechanism'          ],
+                            ['cork_mechanism_group',      'prevent'                 ],
+                            [''                    ,      ''                        ],
+                            [''                    ,      ''                        ],
+                            ['cork_mechanism_group',      'prevent'                 ],
+                            [,''],
+                            [,''],
+                          ]

@@ -10,25 +10,39 @@ module.exports = function(r_e_r_unpiped_stream){
                               let r_e_r_chunk;
                               while (null !== (r_e_r_chunk = arguments[1].read())) {
 
-                                
+
+
                                   if (r_e_r_chunk.indexOf('David Tallon') != -1) {
-                                    // console.log(r_e_r_chunk.toString())
-                                    var r_e_r_toss_talon = r_e_r_chunk.toString().split('David Tallon').join('Adam Lampls')          
-                                    const r_e_r_buf = Buffer.from(r_e_r_toss_talon, 'utf8');
-                                    // arguments[1].off('error', C);
-                                    // might throw an error on unshift?
-                                    // remove the 'readable' because your in a while loop calling the read operation 
-                                        // and I want to see if it actually unshifted by piping it to a writestream to a file
-                                    arguments[1].off('readable', r_e_r_unshift);
-                                    if (r_e_r_buf.length){
-                                      console.log(r_e_r_buf.length)
-                                      arguments[1].unshift(r_e_r_buf);          
-                                    // now the body of the message can be read from the stream.          
-                                    }
-                                    arguments[1].pipe(r_e_r_unpiped_stream)
+
+
+                                      // console.log(r_e_r_chunk.toString())
+                                      var r_e_r_toss_talon = r_e_r_chunk.toString().split('David Tallon').join('Adam Lampls')          
+                                      const r_e_r_buf = Buffer.from(r_e_r_toss_talon, 'utf8');
+                                      // remove the 'readable' because your in a while loop calling the read operation 
+                                          // and I want to see if it actually unshifted by piping it to a writestream to a file
+                                      arguments[1].off('readable', r_e_r_unshift);
+                                      if (r_e_r_buf.length){
+                                        console.log(r_e_r_buf.length)
+                                        arguments[1].unshift(r_e_r_buf);          
+                                      // now the body of the message can be read from the stream.          
+                                      }
+                                      arguments[1].pipe(r_e_r_unpiped_stream)
 
 
                                   }
+
+
+                                  else if (r_e_r_chunk.indexOf('David Tallon') == -1 && r_e_r_chunk.indexOf('Adam Lampls') == -1){
+
+                                      
+                                      r_e_r_unpiped_stream.write(r_e_r_chunk.toString())
+                                      // if you want to keep the first part of the code
+                                      // place in an if staement so you want find david tall
+                                      // inthe write file and keep the change out because before the call 
+                                      // this executes one more time
+
+                                  }
+
 
 
                                   else {

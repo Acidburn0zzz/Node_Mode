@@ -6,12 +6,14 @@ const required_dir = path.join(process.env.HOME, 'My_Computer/NVM/NODE/MINI_PROJ
 const read_monitor = require(required_dir + '/read_monitor.js')
 const async_listener = require(required_dir +'/async_listener.js')
 const node_mode = require(required_dir +'/node_mode.js')
+const node_mode_threads = require(required_dir +'/node_mode_threads.js')
 const circular_replacer = require(required_dir +'/circular_replacer.js')
 const readable_e_r_unshift = require(required_dir +'/r_e_r_unshift.js')
 const stream_finished = require(required_dir + '/stream_finished.js')
 const pipeline = require(required_dir + '/pipeline.js')
 const drain = require(required_dir + '/drain.js')
 const cork_and_uncork = require(required_dir + '/cork_and_uncork.js')
+const r_p = require(required_dir + '/readable_pause.js')
 const c_u = cork_and_uncork()
 const d_rn = drain()
 const s_f = stream_finished()
@@ -55,7 +57,7 @@ var dynamic_declare_i = function(){
 
 const toss_data = a_l(function(){
   // console.log(arguments)
-  // console.log('tossing data') 
+  console.log('tossing data') 
 })
 
 const reading_file = a_l(function(){
@@ -236,7 +238,25 @@ fs.open(r_file,r_mode,(r_err,r_fd) =>{
           fd:rr_fd, 
           autoClose:false 
         })
-        const r_stream_data_event =node_mode('safe',[[
+        const r_stream_data_event_n_m = [['cork_mechanism_group',
+                                          ['stream_finished','safe',]
+                                        ],
+                                        ['drain_group',
+                                          ['stream_finished','safe','attach_you','to','my','emitter']
+                                        ],
+                                        ['read_group',
+                                          ['stream_finished','safe','implement','to','my','emitter']
+                                        ],    
+                                        ['pause_group',
+                                          ['stream_finished','safe']
+                                        ],
+                                        ['unshift_group',
+                                          ['stream_finished','safe','prevent']
+                                        ],                                                                                                                       
+                                        ['pipe_group',
+                                          ['stream_finished','prevent','attach_you','to','my','emitter']
+                                        ]]         
+        const r_stream_data_event =node_mode(r_stream_data_event_n_m,[[
                             'safe',
                             function(){
                              r_stream.on('data',toss_data)
@@ -258,7 +278,25 @@ fs.open(r_file,r_mode,(r_err,r_fd) =>{
                               s_f(r_stream)
                             }]                                                                                                          
                         ])
-        const w_stream_last =node_mode('safe',[[
+        const w_stream_last_n_m = [['cork_mechanism_group',
+                                    ['stream_finished','unknown',]
+                                  ],
+                                  ['drain_group',
+                                    ['stream_finished','prevent']
+                                  ], 
+                                  ['read_group',
+                                    ['stream_finished','prevent']
+                                  ],
+                                  ['pause_group',
+                                    ['stream_finished','prevent','unknown']
+                                  ], 
+                                  ['unshift_group',
+                                    ['stream_finished','prevent','unknown']
+                                  ],                                                                                                      
+                                  ['pipe_group',
+                                    ['stream_finished','unknown','prevent','to','my','emitter']
+                                  ]]          
+        const w_stream_last =node_mode(w_stream_last_n_m,[[
                             'safe',
                             function(){
                               // console.log('do i exist here',w_script_info[0])
@@ -276,12 +314,12 @@ fs.open(r_file,r_mode,(r_err,r_fd) =>{
                               s_f(w_stream)
                             }]               
                         ])    
-        w_stream_last.emit('stream_finished')              
+        w_stream_last.emit(   node_mode_threads[0][0],node_mode_threads[0][1]   )              
         r_stream.on('error', C);
         r_stream.on('end',()=>{
           setImmediate(() => {
             console.log('nothing more to read closing  readstream')                         
-            w_stream_last.emit('unknown')
+            w_stream_last.emit(   node_mode_threads[1][0],node_mode_threads[1][1]   )
             r_stream.resume(); //this helps clear the buffer                                            
             close_file(rr_fd,'read_file',r_file)
           })
@@ -291,26 +329,40 @@ fs.open(r_file,r_mode,(r_err,r_fd) =>{
             console.log("looks like the fd was closed by the stream ")
           })
         })
-        r_stream_data_event.emit('safe')   
-        r_stream_data_event.emit('stream_finished')                       
+        r_stream_data_event.emit(   node_mode_threads[2][0],node_mode_threads[2][1]   )   
+        r_stream_data_event.emit(   node_mode_threads[3][0],node_mode_threads[3][1]   )                       
         console.log('readable stream intializaed')
         const pipe_emitter_n_m =  [['cork_mechanism_group',
-                                    ['cork_mechanism','more_mechanism','attach_you','to','my','emitter']
+                                    ['cork_mechanism','prevent','attach_you','to','my','emitter']
                                   ],
-                                  ['pork',
-                                    ['cork_mechanism','more_mechanism','attach_you','to','my','emitter']
+                                  ['drain_group',
+                                    ['drain','prevent','attach_you','to','my','emitter']
                                   ], 
-                                  ['cyvrus',
-                                    ['cork_mechanism','more_mechanism','attach_you','to','my','emitter']
+                                  ['read_group',
+                                    ['prevent','attach_you','to','my','emitter']
+                                  ],   
+                                  ['pause_group',
+                                    ['prevent','pause','to','my','emitter']
+                                  ], 
+                                  ['unshift_group',
+                                    ['prevent','unshift_readable','to','my','emitter']
+                                  ],                                                                                                    
+                                  ['pipe_group',
+                                    ['unpipe_pause','prevent','pipeline','to','my','emitter']
                                   ]]  
-        const pipe_emitter =node_mode(pipe_emitter_n_m,[[
+        const pipe_emitter =node_mode(pipe_emitter_n_m,[[      
                         'unpipe_pause',
                         function(){                     
                             unpiped_stream = r_stream.pipe(w_stream,{end:false})                                
                         }],
+                        ['pause',
+                        function(){
+                            r_p(r_stream)
+                        }],                        
                         ['unshift_data',
                         function(){
                             r_stream.on('data',r_f_unshift)
+                            // dont use not compleleted
                         }],                            
                         ['unshift_readable',
                         function(){
@@ -337,14 +389,50 @@ fs.open(r_file,r_mode,(r_err,r_fd) =>{
                             c_u(w_stream,"getting corked")
                         }],                                          
                   ])                                     
-        pipe_emitter.emit('cork_mechanism_group','cork_mechanism') 
-        pipe_emitter.emit('prevent')        
-        const piping_action = node_mode('prevent',[[
+        pipe_emitter.emit(   node_mode_threads[4][0],node_mode_threads[4][1]   ) 
+        pipe_emitter.emit(   node_mode_threads[5][0],node_mode_threads[5][1]   )      
+        const piping_action_n_m = [['cork_mechanism_group',
+                                    ['prevent']
+                                  ],
+                                  ['drain_group',
+                                    ['prevent','more_mechanism','attach_you','to','my','emitter']
+                                  ], 
+                                  ['read_group',
+                                    ['prevent','more_mechanism','attach_you','to','my','emitter']
+                                  ],
+                                  ['pause_group',
+                                    ['prevent','more_mechanism','attach_you','to','my','emitter']
+                                  ], 
+                                  ['unshift_group',
+                                    ['prevent','more_mechanism','attach_you','to','my','emitter']
+                                  ],                                                                                                       
+                                  ['pipe_group',
+                                    ['safe','more_mechanism','prevent','to','my','emitter']
+                                  ]]             
+        const piping_action = node_mode(piping_action_n_m,[[
                         'safe',
                         function(){
                           if(r_stream.bytesRead > 100  && piping){
                             console.log(r_stream.bytesRead > 100  && piping,r_stream.bytesRead)
-                            const r_stream_dest_next = node_mode('safe',[[
+                            const r_stream_dest_next_n_m =  [['cork_mechanism_group',
+                                                              ['']
+                                                            ],
+                                                            ['drain_group',
+                                                              ['cork_mechanism','more_mechanism','attach_you','to','my','emitter']
+                                                            ],
+                                                            ['read_group',
+                                                              ['','more_mechanism','attach_you','to','my','emitter']
+                                                            ], 
+                                                            ['pause_group',
+                                                              ['','more_mechanism','attach_you','to','my','emitter']
+                                                            ],
+                                                            ['unshift_group',
+                                                              ['','more_mechanism','attach_you','to','my','emitter']
+                                                            ],                                                                                                                                                                                     
+                                                            ['pipe_group',
+                                                              ['unpipe_pause','unpipe_data','unpipe_data_danger','to','my','emitter']
+                                                            ]]                             
+                            const r_stream_dest_next = node_mode(r_stream_dest_next_n_m,[[
                                                 'unpipe_pause',
                                                 function(){
                                                   r_stream.unpipe(unpiped_stream)
@@ -363,7 +451,7 @@ fs.open(r_file,r_mode,(r_err,r_fd) =>{
                                                   r_stream.unpipe(unpiped_stream)                                 
                                                 }]
                                           ]) 
-                            r_stream_dest_next.emit('unpipe_pause')            
+                            r_stream_dest_next.emit(   node_mode_threads[6][0],node_mode_threads[6][1]   )            
                             // console.log(r_stream._events.data)
                                // what happens that node_mode  is specific where, when node mode puts the functions made by 
                                // async_listener and attaches it to the ee, the technicality of ee says that it takes a function 
@@ -374,8 +462,26 @@ fs.open(r_file,r_mode,(r_err,r_fd) =>{
                             console.log('I unpiped and paused the stream hopefully on resume I get my data back')
                             setTimeout(function(){
                               console.log('did the readstream stop with me',r_stream.bytesRead)
-                              console.log('are we getting a buffer clog',r_stream.readableLength,r_stream.readableHighWaterMark)              
-                              const r_stream_dest_orig = node_mode('safe',[[
+                              console.log('are we getting a buffer clog',r_stream.readableLength,r_stream.readableHighWaterMark)    
+                              const r_stream_dest_orig_n_m =  [['cork_mechanism_group',
+                                                                ['']
+                                                              ],
+                                                              ['drain_group',
+                                                                ['cork_mechanism','more_mechanism','attach_you','to','my','emitter']
+                                                              ],
+                                                              ['read_group',
+                                                                ['','more_mechanism','attach_you','to','my','emitter']
+                                                              ], 
+                                                              ['pause_group',
+                                                                ['','more_mechanism','attach_you','to','my','emitter']
+                                                              ],  
+                                                              ['unshift_group',
+                                                                ['','more_mechanism','attach_you','to','my','emitter']
+                                                              ],                                                                                                                                                                                          
+                                                              ['pipe_group',
+                                                                ['unpipe_pause','unpipe_data','attach_you','to','my','emitter']
+                                                              ]]                                          
+                              const r_stream_dest_orig = node_mode(r_stream_dest_orig_n_m,[[
                                                   'unpipe_pause',
                                                   function(){
                                                     r_stream.pipe(unpiped_stream,{end:false})
@@ -387,14 +493,14 @@ fs.open(r_file,r_mode,(r_err,r_fd) =>{
                                                     r_stream.pipe(unpiped_stream,{end:false})
                                                   }]
                                             ])              
-                              r_stream_dest_orig.emit('unpipe_pause')  
+                              r_stream_dest_orig.emit(   node_mode_threads[7][0],node_mode_threads[7][1]   )  
                             },2000) 
                             piping = false
                           } 
                         }          
                   ]])
         setTimeout(() =>{
-            piping_action.emit('prevent')
+            piping_action.emit(   node_mode_threads[8][0],node_mode_threads[8][1]    )
         },3)
       }
 

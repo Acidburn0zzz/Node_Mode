@@ -5,12 +5,13 @@ const { pipeline } = require('stream');
 // A pipeline to gzip a potentially huge tar file efficiently:
 // p_l_stream array containg every stream used in the pipeline
 
-;
+
 
 
 module.exports = function(){
             return function(...p_l_stream){  
               //using p_l_stream like that works!
+              // if there is another stream you get double the result
                     pipeline(
                       p_l_stream,
                       (err) => {

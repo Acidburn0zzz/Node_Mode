@@ -22,7 +22,6 @@ module.exports = function(){
 							   return function(){
 
 							   			var l_f_a_args = arguments
-							   			// console.log(l_f_d_args)
 										if(listener_function != undefined){
 
 
@@ -30,7 +29,7 @@ module.exports = function(){
 												// the first arg is the are l_f_g_args
 												// the developers should handle circular objects or
 												// ask for you module in l_f_d_args
-												listener_function(Array.from(arguments),this,l_f_d_args,l_f_a_args)											
+												listener_function(Array.from(l_f_a_args),this,l_f_d_args)											
 											})
 
 
