@@ -43,6 +43,10 @@ const node_mode_async_listener = require('./async_listener.js')
 
 module.exports = function(n_m = 'safe',codes,node_mode_needs = 'whole',node_mode_async = true,node_mode_args = null){
 
+						const n_m_isStrict = (function() { 	
+							return !this; 
+						})();
+
 						const node_mode_emitter = new node_mode_Emitter();
 						const node_mode_a_l = node_mode_async_listener()
 						if(node_mode_needs == 'whole' && Array.isArray(codes) && node_mode_async && typeof(codes[0]) == 'function' ){
@@ -94,11 +98,22 @@ module.exports = function(n_m = 'safe',codes,node_mode_needs = 'whole',node_mode
 
 		        																	if(!existing_listener){
 
+		        																		if(!n_m_isStrict){
 
-		        																		// console.log('Node Mode Emitter Error, you did not assign the '+arguments[0][0].toString()+' listener to the group ' + arguments[2][2])
+
+		        																			console.log('Node Mode Emitter Error, you did not assign the '+arguments[0][0].toString()+' listener to the group ' + arguments[2][2])
+		        																		
+
+		        																		}
 		        																		// console.log(arguments)
-		        																		throw new Error('Node Mode Emitter Error, you did not assign the '+arguments[0][0].toString()+' listener to the group ' + arguments[2][2])
 
+		        																		else{
+
+
+		        																			throw new Error('Node Mode Emitter Error, you did not assign the '+arguments[0][0].toString()+' listener to the group ' + arguments[2][2])
+
+
+		        																		}	
 
 		        																	}
 
@@ -154,4 +169,7 @@ module.exports = function(n_m = 'safe',codes,node_mode_needs = 'whole',node_mode
 						}
 					
 			}
+
+
+
 
