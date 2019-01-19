@@ -22,7 +22,7 @@ const p_l = pipeline()
 const r_file = 'r.txt'
 const r_mode = 'r'
 const w_file = "w.txt"
-const w_mode = 'w'
+const w_mode = 'a'
 var ww_fd;
 var rr_fd;
 var open_items = []
@@ -50,47 +50,47 @@ var dynamic_declare_i = function(){
 
   },1)
 }
-process.on('uncaughtException',()=>{    
+process.on('uncaughtException',(err)=>{    
+    console.log(err)
     for (var open_items_i = open_items.length - 1; open_items_i >= 0; open_items_i--) {
+        // console.log(open_items[open_items_i][1])
 
 
-      if(   open_items[open_items_i][0] == 'fd'   ){
+        if(   open_items[open_items_i][0] == 'fd'   ){
 
-      
-          close_file(    open_items[open_items_i][1]   )
-          console.log('file closed on error ')  
-
-
-      }
-
-
-      else if(   open_items[open_items_i][0] == 'write_stream'   ){
-
-
-          open_items[open_items_i][1].emit('error') 
-          console.log('write_stream closed on error')       
-
-      }
-
-
-      else if(   open_items[open_items_i][0] == 'read_stream'   ){
-
-
-          open_items[open_items_i][1].emit('error')
-          console.log('read_stream closed on error')
         
+            close_file(    open_items[open_items_i][1],'file',undefined,true   )              
 
-      }      
+
+        }
+
+
+        else if(   open_items[open_items_i][0] == 'write_stream'   ){
+
+
+            open_items[open_items_i][1].emit('process_uncaught')           
+                  
+
+        }
+
+
+        else if(   open_items[open_items_i][0] == 'read_stream'   ){
+
+
+            open_items[open_items_i][1].emit('process_uncaught')            
+          
+
+        }      
 
  
     }
     process.exit() 
-
 })
 process.on('exit',(code) =>{
     console.log(' an error occured but I  closed all files and streams')    
     Error.stack != undefined ? console.log(Error.stack) : console.log('trying to show you the error')
 })
+
 // experimental, provides new object when needed items come into existence
 
 //implement use of sync and datasync to recover files
@@ -139,9 +139,9 @@ const r_f_unshift = a_l(function(){
 })
 
 
-async function close_file(c_fd,c_name =undefined,r_w = undefined){
+async function close_file(c_fd,c_name =undefined,r_w = undefined,uncaught = false){
 
-    console.log(r_w)
+    // console.log(r_w)    
 
 
     if(   r_monitor != null   ){
@@ -155,36 +155,52 @@ async function close_file(c_fd,c_name =undefined,r_w = undefined){
     }
 
 
+    if(   uncaught   ){
+
+
+        try{
+            fs.closeSync(   c_fd   )
+            console.log('file closed on error ',c_fd)
+        }
+        catch(   c_err   ){
+          console.log( c_fd,c_err)
+          console.log('close me or someone else closed me check the errors, you might see a lot of me ')            
+        }
+
+
+    }
+
+
     fs.close(c_fd,(c_err) =>{
 
 
-      if(c_err){
+        if(c_err){
 
 
-        console.log(r_w ,c_fd,c_err)
-        console.log('close me or someone else closed me check the errors, you should see a lot of me ')
+          console.log(r_w ,c_fd,c_err)
+          console.log('close me or someone else closed me check the errors, you should see a lot of me ')
 
-      }
-
-
-      else if(c_name != undefined){
+        }
 
 
-        console.log(r_w,c_name)
-        console.log('if itclosed the file '+ c_name +' is closed now')
+        else if(c_name != undefined){
+
+
+          console.log(r_w,c_name)
+          console.log('if itclosed the file '+ c_name +' is closed now')
 
 
 
-      }
+        }
 
 
-      else{
+        else{
 
 
-        console.log(r_w ,c_fd,c_err)
-        console.log('item closed')
+          console.log(r_w ,c_fd,c_err)
+          console.log('item closed')
 
-      }
+        }
 
 
     })  
@@ -199,8 +215,7 @@ const stream_ready = a_l(function(){
 
 const B = function(err){
             setImmediate(() => {               
-                console.log('error thrown in writeStream close everything ',err) 
-                this.emit('error')
+                console.log('error thrown in writeStream close everything ',err)                 
                 this.end()
                 // console.log(this)
                 close_file(rr_fd,'read_file',this)
@@ -213,39 +228,35 @@ const B = function(err){
 const C = function(err){
             setImmediate(() => {               
                 console.log('error thrown in readStream close everything ',err) 
-                this.resume() //check to see if there are bytes in the buffer
-                this.emit('error')
+                this.resume() //check to see if there are bytes in the buffer                
                 this.close()
                 this.push(null);
                 this.read(0);                
-                // console.log(this)
-                close_file(rr_fd,'read_file',this)
+                // console.log(this)                
                 close_file(ww_fd,'write_file',this)              
             });  
 }
 
-const write_stream_error_handler = a_l(function(err){     
+const write_stream_uncaught_handler = function(err){     
                 console.log('error thrown in writeStream close everything ',err) 
-                this.emit('error')
                 this.end()
-                console.log(this)
-                close_file(rr_fd,'read_file',this)
-                close_file(ww_fd,'write_file',this)                            
-})
+                // console.log(this)              
+                close_file(ww_fd,'write_file',this,true)                            
+}
 
 
 
-const read_stream_error_handler = a_l(function(err){                           
+const read_stream_uncaught_handler = function(err){                           
                 console.log('error thrown in readStream close everything ',err) 
                 this.resume() //check to see if there are bytes in the buffer
-                this.emit('error')
                 this.close()
                 this.push(null);
                 this.read(0);                
-                console.log(this)
-                close_file(rr_fd,'read_file',this)
-                close_file(ww_fd,'write_file',this)                            
-})
+                // console.log(this)                
+                close_file(ww_fd,'write_file',this,true)                            
+}
+
+
 
 
 fs.open(r_file,r_mode,(r_err,r_fd) =>{
@@ -264,7 +275,7 @@ fs.open(r_file,r_mode,(r_err,r_fd) =>{
 
     rr_fd = r_fd;
     open_items.push(['fd',r_fd])
-    console.log('read file opened')
+    console.log('read file opened',r_fd)
     fs.open(w_file,w_mode,(w_err,w_fd) =>{
 
 
@@ -282,12 +293,13 @@ fs.open(r_file,r_mode,(r_err,r_fd) =>{
 
         ww_fd = w_fd
         open_items.push(['fd',w_fd])
-        console.log('write file opened')
+        console.log('write file opened',w_fd)
         const w_stream = fs.createWriteStream(w_file,{                  
               start:0,
               fd:ww_fd,
               autoClose:false                 
-        })    
+        })
+        w_stream.on('process_uncaught',write_stream_uncaught_handler)    
         w_stream.setDefaultEncoding('utf8')
         w_stream.on('error', B);        
         w_stream.on('finish',()=>{
@@ -313,6 +325,7 @@ fs.open(r_file,r_mode,(r_err,r_fd) =>{
           fd:rr_fd, 
           autoClose:false 
         })
+        r_stream.on('process_uncaught',read_stream_uncaught_handler)
         const r_stream_data_event_n_m = [['cork_mechanism_group',
                                           ['stream_finished','safe',]
                                         ],
@@ -426,7 +439,8 @@ fs.open(r_file,r_mode,(r_err,r_fd) =>{
                                   ],                                                                                                    
                                   ['pipe_group',
                                     ['unpipe_pause','prevent','pipeline','to','my','emitter']
-                                  ]]                                    
+                                  ]]  
+        var a = c + 5                                  
         const pipe_emitter =node_mode(pipe_emitter_n_m,[[      
                         'unpipe_pause',
                         function(){                     
