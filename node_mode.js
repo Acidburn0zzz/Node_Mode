@@ -95,9 +95,9 @@ module.exports = function(n_m = 'safe',codes,node_mode_needs = 'whole',node_mode
 		        																	if(!existing_listener){
 
 
-		        																		console.log('Node Mode Emitter Error, you did not assign the '+arguments[0][0].toString()+' listener to the group ' + arguments[2][2])
+		        																		// console.log('Node Mode Emitter Error, you did not assign the '+arguments[0][0].toString()+' listener to the group ' + arguments[2][2])
 		        																		// console.log(arguments)
-		        																		// throw new Error('Node Mode Emitter Error, you did not assign this listener to this group')
+		        																		throw new Error('Node Mode Emitter Error, you did not assign the '+arguments[0][0].toString()+' listener to the group ' + arguments[2][2])
 
 
 		        																	}
@@ -106,7 +106,7 @@ module.exports = function(n_m = 'safe',codes,node_mode_needs = 'whole',node_mode
 
 
 		        																	node_mode_emitter.emit(arguments[0][0].toString())		        																
-        																	},n_m[node_mode_2_i][1]),n_m[node_mode_2_i][0])
+        																	},n_m[node_mode_2_i][1],n_m[node_mode_2_i][0]))
 		        			}	
 							return node_mode_emitter
 
