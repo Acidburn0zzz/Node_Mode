@@ -45,7 +45,8 @@ module.exports = function(n_m = 'safe',codes,node_mode_needs = 'whole',node_mode
 
 						const n_m_isStrict = (function() { 	
 							return !this; 
-						})();
+						});
+						// if this doesnt work change
 
 						const node_mode_emitter = new node_mode_Emitter();
 						const node_mode_a_l = node_mode_async_listener()
@@ -98,7 +99,7 @@ module.exports = function(n_m = 'safe',codes,node_mode_needs = 'whole',node_mode
 
 		        																	if(!existing_listener){
 
-		        																		if(!n_m_isStrict){
+		        																		if(!n_m_isStrict()){
 
 
 		        																			console.log('Node Mode Emitter Error, you did not assign the '+arguments[0][0].toString()+' listener to the group ' + arguments[2][2])

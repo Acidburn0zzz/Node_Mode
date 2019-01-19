@@ -25,6 +25,8 @@ const w_file = "w.txt"
 const w_mode = 'w'
 var ww_fd;
 var rr_fd;
+var open_items = []
+var write_stream_0
 var r_response = ''; // for the writable if it needs to be held here
 var w_script_info =[];     //important information developer needs in a file and is using a writeStream to do it 
 var piping = true
@@ -48,11 +50,52 @@ var dynamic_declare_i = function(){
 
   },1)
 }
+process.on('uncaughtException',()=>{    
+    for (var open_items_i = open_items.length - 1; open_items_i >= 0; open_items_i--) {
+
+
+      if(   open_items[open_items_i][0] == 'fd'   ){
+
+      
+          close_file(    open_items[open_items_i][1]   )
+          console.log('file closed on error ')  
+
+
+      }
+
+
+      else if(   open_items[open_items_i][0] == 'write_stream'   ){
+
+
+          open_items[open_items_i][1].emit('error') 
+          console.log('write_stream closed on error')       
+
+      }
+
+
+      else if(   open_items[open_items_i][0] == 'read_stream'   ){
+
+
+          open_items[open_items_i][1].emit('error')
+          console.log('read_stream closed on error')
+        
+
+      }      
+
+ 
+    }
+    process.exit() 
+
+})
+process.on('exit',(code) =>{
+    console.log(' an error occured but I  closed all files and streams')    
+    Error.stack != undefined ? console.log(Error.stack) : console.log('trying to show you the error')
+})
 // experimental, provides new object when needed items come into existence
 
 //implement use of sync and datasync to recover files
-//test the ready event for yourr listernrs
 // your modules are functions not async but i guess this is okay for now
+// make sure the error event triggers the all stream error events do this through pipe line?
 
 
 const toss_data = a_l(function(){
@@ -149,17 +192,23 @@ async function close_file(c_fd,c_name =undefined,r_w = undefined){
 
 }
 
+const stream_ready = a_l(function(){
+    console.log(arguments[1])
+    console.log('writable stream intializaed')
+})
 
 const B = function(err){
             setImmediate(() => {               
                 console.log('error thrown in writeStream close everything ',err) 
                 this.emit('error')
                 this.end()
-                console.log(this)
+                // console.log(this)
                 close_file(rr_fd,'read_file',this)
                 close_file(ww_fd,'write_file',this)              
             });  
 }
+
+
 
 const C = function(err){
             setImmediate(() => {               
@@ -169,11 +218,34 @@ const C = function(err){
                 this.close()
                 this.push(null);
                 this.read(0);                
-                console.log(this)
+                // console.log(this)
                 close_file(rr_fd,'read_file',this)
                 close_file(ww_fd,'write_file',this)              
             });  
 }
+
+const write_stream_error_handler = a_l(function(err){     
+                console.log('error thrown in writeStream close everything ',err) 
+                this.emit('error')
+                this.end()
+                console.log(this)
+                close_file(rr_fd,'read_file',this)
+                close_file(ww_fd,'write_file',this)                            
+})
+
+
+
+const read_stream_error_handler = a_l(function(err){                           
+                console.log('error thrown in readStream close everything ',err) 
+                this.resume() //check to see if there are bytes in the buffer
+                this.emit('error')
+                this.close()
+                this.push(null);
+                this.read(0);                
+                console.log(this)
+                close_file(rr_fd,'read_file',this)
+                close_file(ww_fd,'write_file',this)                            
+})
 
 
 fs.open(r_file,r_mode,(r_err,r_fd) =>{
@@ -191,6 +263,7 @@ fs.open(r_file,r_mode,(r_err,r_fd) =>{
   else{
 
     rr_fd = r_fd;
+    open_items.push(['fd',r_fd])
     console.log('read file opened')
     fs.open(w_file,w_mode,(w_err,w_fd) =>{
 
@@ -208,6 +281,7 @@ fs.open(r_file,r_mode,(r_err,r_fd) =>{
 
 
         ww_fd = w_fd
+        open_items.push(['fd',w_fd])
         console.log('write file opened')
         const w_stream = fs.createWriteStream(w_file,{                  
               start:0,
@@ -231,7 +305,8 @@ fs.open(r_file,r_mode,(r_err,r_fd) =>{
           console.error('Something has stopped piping into the writer.');
           // assert.equal(src, r_stream);
         });                          
-        console.log('writable stream intializaed')          
+        console.log('writable stream intializaed')    
+        open_items.push(['write_stream',w_stream])      
         const r_stream = fs.createReadStream(r_file,{
           start:0,
           // end:2237,
@@ -318,7 +393,8 @@ fs.open(r_file,r_mode,(r_err,r_fd) =>{
         r_stream.on('error', C);
         r_stream.on('end',()=>{
           setImmediate(() => {
-            console.log('nothing more to read closing  readstream')                         
+            console.log('nothing more to read closing  readstream')     
+            console.log(typeof(r_stream),typeof(w_stream))                    
             w_stream_last.emit(   node_mode_threads[1][0],node_mode_threads[1][1]   )
             r_stream.resume(); //this helps clear the buffer                                            
             close_file(rr_fd,'read_file',r_file)
@@ -332,6 +408,7 @@ fs.open(r_file,r_mode,(r_err,r_fd) =>{
         r_stream_data_event.emit(   node_mode_threads[2][0],node_mode_threads[2][1]   )   
         r_stream_data_event.emit(   node_mode_threads[3][0],node_mode_threads[3][1]   )                       
         console.log('readable stream intializaed')
+        open_items.push(['read_stream',r_stream])
         const pipe_emitter_n_m =  [['cork_mechanism_group',
                                     ['cork_mechanism','prevent','attach_you','to','my','emitter']
                                   ],
@@ -349,7 +426,7 @@ fs.open(r_file,r_mode,(r_err,r_fd) =>{
                                   ],                                                                                                    
                                   ['pipe_group',
                                     ['unpipe_pause','prevent','pipeline','to','my','emitter']
-                                  ]]  
+                                  ]]                                    
         const pipe_emitter =node_mode(pipe_emitter_n_m,[[      
                         'unpipe_pause',
                         function(){                     

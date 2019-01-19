@@ -16,6 +16,7 @@ module.exports = function(){
                                 cork_writer.uncork();
                                 console.log(cork_writer.writableHighWaterMark, cork_writer.bytesWritten)
                             });
+                            // also can use cork_writer.end to get the job done, just make sure the write_stream does not execute .end() in the main app
                         }
                            
 }              

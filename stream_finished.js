@@ -12,6 +12,7 @@ module.exports = function(){
 
 
 												    console.error('Stream failed', s_f_err);
+												    s_f_stream.emit('error')
 
 
 												  } 
