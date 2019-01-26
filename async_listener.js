@@ -13,6 +13,7 @@ module.exports = function(){
 							   // l_f_d_args should be an array please if we equate it to 
 								// use arguments object and its not defined here all these instances
 							   // will lose their identity and start sharing data we dont want that
+							   // include a sync option here
 
 							   // the interesting thing is js does not throw an error it jsut the arguments object
 							   // loses its idenitity amongst its owners with all these different software 

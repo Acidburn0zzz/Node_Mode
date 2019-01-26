@@ -180,7 +180,8 @@ const node_mode_threads = [
                             [,''],
                           ]
 
-to see the unshift functionality
+to see the unshift readable functionality
+//try to use unshift data, the readable doesn't check if the writeable needs to be drained
 
 const node_mode_threads = [
                             ['unshift_group',      'stream_finished'         ],                            
@@ -195,6 +196,22 @@ const node_mode_threads = [
                             [,''],
                             [,''],
                           ]                                                    
+
+to see the unshift data functionality
+
+module.exports   = [
+                            ['unshift_group',      'stream_finished'         ],                            
+                            ['unshift_group',      'unknown'                 ],
+                            ['unshift_group',      'prevent'                 ],
+                            ['unshift_group',      'prevent'                 ],
+                            ['unshift_group',      'unshift_data'            ],
+                            ['unshift_group',      'prevent'                 ],
+                            ['unshift_group',      ''                        ],
+                            ['unshift_group',      ''                        ],
+                            ['unshift_group',      'prevent'                 ],
+                            [,''],
+                            [,''],
+                          ]                            
 to see the pipeline functionality 
 <!-- turn unpipe_pause to prevent to see it work once -->
 	

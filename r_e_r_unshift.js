@@ -36,6 +36,7 @@ module.exports = function(r_e_r_unpiped_stream){
 
                                       
                                       r_e_r_unpiped_stream.write(r_e_r_chunk.toString())
+                                      // needs to listen for false
                                       // if you want to keep the first part of the code
                                       // place in an if staement so you want find david tall
                                       // inthe write file and keep the change out because before the call 

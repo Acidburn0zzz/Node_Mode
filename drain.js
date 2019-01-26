@@ -24,7 +24,7 @@ module.exports = function(){
                                 // see if we should continue, or wait
                                 // don't pass the callback, because we're not done yet.
                                 // console.log(writer.bytesWritten)
-                                drain_ok = drain_writer.write(drain_data);
+                                drain_ok = drain_writer.write(drain_ok.toString());                                
                               }
                             } while (drain_i > 0 && drain_ok);
 

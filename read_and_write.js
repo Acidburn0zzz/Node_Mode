@@ -2,7 +2,7 @@ const fs = require('fs')
 const events = require('events')
 const path = require('path');
 // const assert = require('assert')
-const required_dir = path.join(process.env.HOME, 'My_Computer/NVM/NODE/MINI_PROJECTS/PIPE_STREAM')
+const required_dir = path.join(process.env.HOME, 'req_mod_node')
 const read_monitor = require(required_dir + '/read_monitor.js')
 const async_listener = require(required_dir +'/async_listener.js')
 const node_mode = require(required_dir +'/node_mode.js')
@@ -21,8 +21,8 @@ const a_l = async_listener()
 const p_l = pipeline()
 const r_file = 'r.txt'
 const r_mode = 'r'
-const w_file = "w.txt"
-const w_mode = 'a'
+const w_file = "./impt/info.txt"
+const w_mode = 'w'
 var ww_fd;
 var rr_fd;
 var open_items = []
@@ -52,6 +52,10 @@ var dynamic_declare_i = function(){
 }
 process.on('uncaughtException',(err)=>{    
     console.log(err)
+    process.on('exit',(code) =>{
+        console.log(' an error occured but I  closed all files and streams',code)    
+        Error.stack != undefined ? console.log(Error.stack) : console.log('trying to show you the error')
+    })    
     for (var open_items_i = open_items.length - 1; open_items_i >= 0; open_items_i--) {
         // console.log(open_items[open_items_i][1])
 
@@ -86,10 +90,7 @@ process.on('uncaughtException',(err)=>{
     }
     process.exit() 
 })
-process.on('exit',(code) =>{
-    console.log(' an error occured but I  closed all files and streams')    
-    Error.stack != undefined ? console.log(Error.stack) : console.log('trying to show you the error')
-})
+
 
 // experimental, provides new object when needed items come into existence
 
@@ -131,9 +132,69 @@ const r_f_unshift = a_l(function(){
 
 
         console.log(arguments[0][0].toString())
+        var r_f_toss_talon = arguments[0][0].toString().split('David Tallon').join('Adam Lampls')
+        const r_f_buf = Buffer.from(   r_f_toss_talon, 'utf8'   );
+        arguments[1].off(   'data', r_f_unshift   );
+        arguments[1].pause()
+        if (   r_f_buf.length   ){
+          console.log(   r_f_buf.length   )
+          arguments[1].unshift(   r_f_buf   );          
+        // now the body of the message can be read from the stream.          
+        }
+        arguments[1].pipe(unpiped_stream)        
 
 
     }
+
+
+    else if (arguments[0][0].toString().indexOf('David Tallon') == -1 && arguments[0][0].toString().indexOf('Adam Lampls') == -1){
+
+        
+        if(   unpiped_stream.write(arguments[0][0].toString())   ){
+
+            console.log(unpiped_stream.write(arguments[0][0].toString()))
+            var r_f_break = false
+            arguments[1].off(   'data', r_f_unshift   );
+            arguments[1].pause()
+            console.log(   arguments[1].isPaused(),arguments[1].readableFlowing   )
+            unpiped_stream.once('drain',a_l(   function(){  console.log('drained'); r_f_break = true}  )   )
+            while(   true   ){
+                console.log(   'draining not cpu hog'   )
+
+
+                if(   r_f_break   ){
+                    
+
+                    console.log(   'break'   )
+                    arguments[1].on(   'data', r_f_unshift   );
+                    arguments[1].resume()
+                    break;
+
+
+                }
+
+
+            }
+            
+
+
+        }
+        // needs to listen for false
+        // if you want to keep the first part of the code
+        // place in an if staement so you want find david tall
+        // inthe write file and keep the change out because before the call 
+        // this executes one more time
+
+    }    
+
+
+    else {
+
+      // still reading the header.
+      console.log('looking for that string to unshift')
+
+
+    }     
 
     
 })
@@ -232,7 +293,8 @@ const C = function(err){
                 this.close()
                 this.push(null);
                 this.read(0);                
-                // console.log(this)                
+                // console.log(this)      
+                close_file(rr_fd,'read_file',this)          
                 close_file(ww_fd,'write_file',this)              
             });  
 }
@@ -252,7 +314,8 @@ const read_stream_uncaught_handler = function(err){
                 this.close()
                 this.push(null);
                 this.read(0);                
-                // console.log(this)                
+                // console.log(this)            
+                close_file(rr_fd,'read_file',this)    
                 close_file(ww_fd,'write_file',this,true)                            
 }
 
@@ -297,10 +360,9 @@ fs.open(r_file,r_mode,(r_err,r_fd) =>{
         const w_stream = fs.createWriteStream(w_file,{                  
               start:0,
               fd:ww_fd,
-              autoClose:false                 
+              autoClose:false,                               
         })
         w_stream.on('process_uncaught',write_stream_uncaught_handler)    
-        w_stream.setDefaultEncoding('utf8')
         w_stream.on('error', B);        
         w_stream.on('finish',()=>{
           setImmediate(() => {
@@ -323,7 +385,7 @@ fs.open(r_file,r_mode,(r_err,r_fd) =>{
           start:0,
           // end:2237,
           fd:rr_fd, 
-          autoClose:false 
+          autoClose:false,           
         })
         r_stream.on('process_uncaught',read_stream_uncaught_handler)
         const r_stream_data_event_n_m = [['cork_mechanism_group',
@@ -435,12 +497,11 @@ fs.open(r_file,r_mode,(r_err,r_fd) =>{
                                     ['prevent','pause','to','my','emitter']
                                   ], 
                                   ['unshift_group',
-                                    ['prevent','unshift_readable','to','my','emitter']
+                                    ['prevent','unshift_readable','unshift_data','my','emitter']
                                   ],                                                                                                    
                                   ['pipe_group',
                                     ['unpipe_pause','prevent','pipeline','to','my','emitter']
-                                  ]]  
-        var a = c + 5                                  
+                                  ]]                                
         const pipe_emitter =node_mode(pipe_emitter_n_m,[[      
                         'unpipe_pause',
                         function(){                     
@@ -452,6 +513,7 @@ fs.open(r_file,r_mode,(r_err,r_fd) =>{
                         }],                        
                         ['unshift_data',
                         function(){
+                            unpiped_stream = w_stream
                             r_stream.on('data',r_f_unshift)
                             // dont use not compleleted
                         }],                            
