@@ -1,27 +1,67 @@
-const fs = require('fs')
-const events = require('events')
-const path = require('path');
+const n_API = require(process.env.HOME+ "/Required/node_API_header.js").n_API_init({
+  "fs":true,
+  // "p_uE":true,
+  "node_mode":true,
+  "n_m_t":true,
+  "n_m_t_r":true,
+  "node_mode_threads":true,
+  "circular_replacer":true,
+  "required_dir":true,  
+  "required_local_dir":true,
+  "read_monitor":true,
+  "async_listener":true,
+  "readable_e_r_unshift":true,
+  "stream_finished":true,
+  "pipeline":true,
+  "drain":true,
+  "cork_and_uncork":true,
+  "r_p":true,
+  "c_u":true,
+  "d_rn":true,
+  "s_f":true,
+  "a_l":true,
+  "p_l":true  
+},
+{
+  location_dir:__dirname
+});
+
+const fs                       = n_API.API_n_b_p.fs                      
+const async_listener           = n_API.API_n_c.async_listener                    
+const a_l                      = n_API.API_n_c.a_l                    
+const circular_replacer        = n_API.API_n_c.circular_replacer                    
+const node_mode                = n_API.API_n_c.API_node_mode.node_mode                    
+const node_mode_threads        = n_API.API_n_c.API_node_mode.n_m_t                    
+const read_monitor             = n_API.API_n_c.API_stream.read_monitor                    
+const readable_e_r_unshift     = n_API.API_n_c.API_stream.readable_e_r_unshift                                                         
+const r_p                      = n_API.API_n_c.API_stream.r_p                    
+const c_u                      = n_API.API_n_c.API_stream.c_u                    
+const d_rn                     = n_API.API_n_c.API_stream.d_rn                    
+const s_f                      = n_API.API_n_c.API_stream.s_f                    
+const p_l                      = n_API.API_n_c.API_stream.p_l                    
+// const fs = require('fs')
+// const events = require('events')
+// const path = require('path');
 // const assert = require('assert')
-const required_dir = path.join(process.env.HOME, 'req_mod_node')
-const read_monitor = require(required_dir + '/read_monitor.js')
-const async_listener = require(required_dir +'/async_listener.js')
-const node_mode = require(required_dir +'/node_mode.js')
-const node_mode_threads = require(required_dir +'/node_mode_threads.js')
-const circular_replacer = require(required_dir +'/circular_replacer.js')
-const readable_e_r_unshift = require(required_dir +'/r_e_r_unshift.js')
-const stream_finished = require(required_dir + '/stream_finished.js')
-const pipeline = require(required_dir + '/pipeline.js')
-const drain = require(required_dir + '/drain.js')
-const cork_and_uncork = require(required_dir + '/cork_and_uncork.js')
-const r_p = require(required_dir + '/readable_pause.js')
-const c_u = cork_and_uncork()
-const d_rn = drain()
-const s_f = stream_finished()
-const a_l = async_listener()
-const p_l = pipeline()
+// const read_monitor = require(required_dir + '/read_monitor.js')
+// const async_listener = require(required_dir +'/async_listener.js')
+// const node_mode = require(required_dir +'/node_mode.js')
+// const node_mode_threads = require(required_dir +'/node_mode_threads.js')
+// const circular_replacer = require(required_dir +'/circular_replacer.js')
+// const readable_e_r_unshift = require(required_dir +'/r_e_r_unshift.js')
+// const stream_finished = require(required_dir + '/stream_finished.js')
+// const pipeline = require(required_dir + '/pipeline.js')
+// const drain = require(required_dir + '/drain.js')
+// const cork_and_uncork = require(required_dir + '/cork_and_uncork.js')
+// const r_p = require(required_dir + '/readable_pause.js')
+// const c_u = cork_and_uncork()
+// const d_rn = drain()
+// const s_f = stream_finished()
+// const a_l = async_listener()
+// const p_l = pipeline()
 const r_file = 'r.txt'
 const r_mode = 'r'
-const w_file = "./impt/info.txt"
+const w_file = "w.txt"
 const w_mode = 'w'
 var ww_fd;
 var rr_fd;

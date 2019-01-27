@@ -1,9 +1,20 @@
 const path = require('path');
 // const assert = require('assert')
-const required_dir = path.join(   process.env.HOME, 'req_mod_node'   )
+const required_dir = path.join(   process.env.HOME, 'Required','req_mod_node'   )
 const circular_replacer = require(   required_dir +'/circular_replacer.js'   )
 
-// p_uE
+// process_uncaughtException.message
+    //message to for dev to tell self when the process completes everything
+//  process_uncaughtException.open_items 
+    // the open items that the API needs to have a method to close
+// process_uncaughtException.handler
+        //the  uncaughtException handler that uses the provided function to close the objects, it should be considered whether defaults are applied
+        // in case the developer forgets to write a close method for it
+            // the dev must write a function and assoicate the name of the type to the object they are trying to close
+            // if slighty different operations are needed use a node_mode emitter, provide slighty differnent name
+                // future implementations will decide what the developer wants to do here but to coventinonal js if your rewrite a function on the same
+                // object propety you can bypass the problem and use the same name for different specifics of closing the same object type
+
 // push the opened object and the type to be proerly closed object
 // how you use it is that the closing function is added as a method to the object and as it goes through open items its has a type, 
     // the type name is the name of the function to close the open object
@@ -11,6 +22,7 @@ const circular_replacer = require(   required_dir +'/circular_replacer.js'   )
 // make a check if the dev tries to register a fuction open object type twice 
     // tell dev they cannot do this and this plugin will use the last extension if they want to be innovative so they can apply different rules 
     // to different objects
+
 var process_uncaughtException = {}
 process_uncaughtException.message = ''
 process_uncaughtException.open_items = []

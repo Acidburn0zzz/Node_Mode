@@ -75,7 +75,16 @@ node_mode
 		access like so 
 		node_mode_emitter.on(    node_mode_threads[group][0], node_mode_threads[event][1],)
 
-		make sure any node_mode_emitters added to your code update in the list!!!!!!!!!!!!!!!1
+		make sure any node_mode_emitters added to your code update in the list!!!!!!!!!!!!!!!
+
+        n_m_t_registry
+
+        its a localized place where all thread groups for everty node_mode emitter in an API, exists, this simple implementation is optional and can be 
+            used to make your code much cleaner 
+
+        module.exports.n_m_t_registry = {
+                                            node_mode_emitter_name: n_m_group ( refer to above   )
+                                        }            
 
 replace const node_mode_threads to see actions
 dont use setTimeout or setInterval with a node_mode emitter
