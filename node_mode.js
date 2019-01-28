@@ -1,6 +1,15 @@
-const node_mode_EventEmitter = require('events');
+const n_API = require(process.env.HOME+ "/Required/node_API_header.js").n_API_init({
+  "events":true,        
+  "circular_replacer":true,    
+  "required_local_dir":true,  
+  "async_listener":true,      
+},
+{
+  location_dir:__dirname
+});
+const node_mode_EventEmitter = n_API.API_n_b_p.events;
 class node_mode_Emitter extends node_mode_EventEmitter {}
-const node_mode_async_listener = require('./async_listener.js')
+const node_mode_async_listener = n_API.API_n_c.async_listener
 
 // n_m
 	// safe basic way of doing things no problems
@@ -41,16 +50,30 @@ const node_mode_async_listener = require('./async_listener.js')
 
 
 
-
 module.exports = function(n_m = 'safe',codes,node_mode_needs = 'whole',node_mode_async = true,node_mode_args = null){
-
+						// if this doesnt work change
 						const n_m_isStrict = (function() { 	
 							return !this; 
 						});
-						// if this doesnt work change
+
+
+						if(   typeof(    n_m   ) == "object" && !Array.isArray(   n_m   )   ){
+
+
+							var n_m             = n_m.n_m
+							var codes           = n_m.codes
+							var node_mode_needs = n_m.node_mode_needs
+							var node_mode_async = n_m.node_mode_async
+							var node_mode_args  = n_m.node_mode_args
+							  
+							
+						}						
+
 
 						const node_mode_emitter = new node_mode_Emitter();
 						const node_mode_a_l = node_mode_async_listener()
+
+
 						if(node_mode_needs == 'whole' && Array.isArray(codes) && node_mode_async && typeof(codes[0]) == 'function' ){
 
 

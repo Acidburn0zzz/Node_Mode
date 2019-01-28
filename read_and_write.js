@@ -20,12 +20,12 @@ const n_API = require(process.env.HOME+ "/Required/node_API_header.js").n_API_in
   "d_rn":true,
   "s_f":true,
   "a_l":true,
-  "p_l":true  
+  "p_l":true,
+  "p_std_stream_m":true  
 },
 {
   location_dir:__dirname
 });
-
 const fs                       = n_API.API_n_b_p.fs                      
 const async_listener           = n_API.API_n_c.async_listener                    
 const a_l                      = n_API.API_n_c.a_l                    
@@ -38,27 +38,8 @@ const r_p                      = n_API.API_n_c.API_stream.r_p
 const c_u                      = n_API.API_n_c.API_stream.c_u                    
 const d_rn                     = n_API.API_n_c.API_stream.d_rn                    
 const s_f                      = n_API.API_n_c.API_stream.s_f                    
-const p_l                      = n_API.API_n_c.API_stream.p_l                    
-// const fs = require('fs')
-// const events = require('events')
-// const path = require('path');
-// const assert = require('assert')
-// const read_monitor = require(required_dir + '/read_monitor.js')
-// const async_listener = require(required_dir +'/async_listener.js')
-// const node_mode = require(required_dir +'/node_mode.js')
-// const node_mode_threads = require(required_dir +'/node_mode_threads.js')
-// const circular_replacer = require(required_dir +'/circular_replacer.js')
-// const readable_e_r_unshift = require(required_dir +'/r_e_r_unshift.js')
-// const stream_finished = require(required_dir + '/stream_finished.js')
-// const pipeline = require(required_dir + '/pipeline.js')
-// const drain = require(required_dir + '/drain.js')
-// const cork_and_uncork = require(required_dir + '/cork_and_uncork.js')
-// const r_p = require(required_dir + '/readable_pause.js')
-// const c_u = cork_and_uncork()
-// const d_rn = drain()
-// const s_f = stream_finished()
-// const a_l = async_listener()
-// const p_l = pipeline()
+const p_l                      = n_API.API_n_c.API_stream.p_l    
+const p_std_stream_m           = n_API.API_n_c.API_process.p_std_stream_m             
 const r_file = 'r.txt'
 const r_mode = 'r'
 const w_file = "w.txt"
@@ -314,6 +295,24 @@ const stream_ready = a_l(function(){
     console.log('writable stream intializaed')
 })
 
+const w_stream_finish = function(   ){
+              
+
+              if(   arguments[2][1] == undefined   ){
+
+                  
+                  arguments[2][1] = false       
+
+
+              }      
+
+
+              console.log('All writes are now complete. writestream closed');
+              close_file(ww_fd,'write_file',w_file, arguments[2][1])
+}
+
+const a_l_w_stream_finish = a_l(w_stream_finish)
+
 const B = function(err){
             setImmediate(() => {               
                 console.log('error thrown in writeStream close everything ',err)                 
@@ -404,13 +403,7 @@ fs.open(r_file,r_mode,(r_err,r_fd) =>{
         })
         w_stream.on('process_uncaught',write_stream_uncaught_handler)    
         w_stream.on('error', B);        
-        w_stream.on('finish',()=>{
-          setImmediate(() => {
-              console.log('All writes are now complete. writestream closed');
-              close_file(ww_fd,'write_file',w_file)
-
-          });
-        })     
+        w_stream.once('finish',a_l_w_stream_finish   )     
         w_stream.on('pipe', (src) => {
           console.error('something is piping into the writer');
           // assert.equal(src, r_stream);
@@ -444,7 +437,7 @@ fs.open(r_file,r_mode,(r_err,r_fd) =>{
                                           ['stream_finished','safe','prevent']
                                         ],                                                                                                                       
                                         ['pipe_group',
-                                          ['stream_finished','prevent','attach_you','to','my','emitter']
+                                          ['stream_finished','prevent','safe','to','my','emitter']
                                         ]]         
         const r_stream_data_event =node_mode(r_stream_data_event_n_m,[[
                             'safe',
@@ -484,7 +477,7 @@ fs.open(r_file,r_mode,(r_err,r_fd) =>{
                                     ['stream_finished','prevent','unknown']
                                   ],                                                                                                      
                                   ['pipe_group',
-                                    ['stream_finished','unknown','prevent','to','my','emitter']
+                                    ['stream_finished','unknown','prevent','process_stdout_pipe','my','emitter']
                                   ]]          
         const w_stream_last =node_mode(w_stream_last_n_m,[[
                             'safe',
@@ -499,6 +492,10 @@ fs.open(r_file,r_mode,(r_err,r_fd) =>{
                             function(){
                               w_stream.end()
                             }],
+                            ['process_stdout_pipe',
+                            function(){
+                              w_stream.end()
+                            }],                            
                             ['stream_finished',
                             function(){
                               s_f(w_stream)
@@ -540,10 +537,23 @@ fs.open(r_file,r_mode,(r_err,r_fd) =>{
                                     ['prevent','unshift_readable','unshift_data','my','emitter']
                                   ],                                                                                                    
                                   ['pipe_group',
-                                    ['unpipe_pause','prevent','pipeline','to','my','emitter']
+                                    ['unpipe_pause','prevent','pipeline','process_stdout_pipe_unknown','process_stdout_pipe_danger','emitter']
                                   ]]                                
-        const pipe_emitter =node_mode(pipe_emitter_n_m,[[      
-                        'unpipe_pause',
+        const pipe_emitter =node_mode(pipe_emitter_n_m,[[ 
+                        'process_stdout_pipe_danger',
+                        function(){     
+                            p_std_stream_m.std_info.p_stdout_write = process.stdout.write
+                            p_std_stream_m.std_info.w_stream_finish = w_stream_finish                                            
+                            process.stdout.write = w_stream.write.bind(w_stream)                            
+                            process.on('exit', a_l(   { listener_function: p_std_stream_m.handler},process.stdout,w_stream,a_l_w_stream_finish   )   )                            
+                        }],
+                        ['process_stdout_pipe_unknown',
+                        function(){     
+                            p_std_stream_m.std_info.p_stdout_write = process.stdout.write                                            
+                            process.stdout.write = w_stream.write.bind(w_stream)
+                            process.once('beforeExit', a_l(   p_std_stream_m.handler,process.stdout,w_stream   )   )                            
+                        }],                                                          
+                        ['unpipe_pause',
                         function(){                     
                             unpiped_stream = r_stream.pipe(w_stream,{end:false})                                
                         }],

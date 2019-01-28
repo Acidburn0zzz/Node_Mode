@@ -1,1 +1,65 @@
-truetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruetruecopied a bunch of times
+tossing data
+tossing data
+tossing data
+tossing data
+tossing data
+tossing data
+tossing data
+tossing data
+tossing data
+tossing data
+tossing data
+tossing data
+tossing data
+tossing data
+tossing data
+tossing data
+tossing data
+tossing data
+tossing data
+tossing data
+tossing data
+tossing data
+tossing data
+tossing data
+tossing data
+tossing data
+tossing data
+tossing data
+tossing data
+tossing data
+tossing data
+tossing data
+tossing data
+tossing data
+tossing data
+tossing data
+tossing data
+tossing data
+tossing data
+tossing data
+tossing data
+tossing data
+tossing data
+tossing data
+tossing data
+tossing data
+tossing data
+tossing data
+tossing data
+tossing data
+tossing data
+tossing data
+tossing data
+tossing data
+tossing data
+tossing data
+tossing data
+tossing data
+tossing data
+the stream for r.txt is finished no errors
+nothing more to read closing  readstream
+object object
+r.txt read_file
+if itclosed the file read_file is closed now
+adfasfsafsafsd
