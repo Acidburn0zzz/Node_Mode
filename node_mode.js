@@ -11,6 +11,31 @@ const node_mode_EventEmitter = n_API.API_n_b_p.events;
 class node_mode_Emitter extends node_mode_EventEmitter {}
 const node_mode_async_listener = n_API.API_n_c.async_listener
 
+function node_mode_syncify(){
+
+	var dev_obj = arguments[0] 
+
+
+	if(   dev_obj.sync == true   ){
+
+
+		return {
+			     listener_function: dev_obj.listener_function
+		       }
+
+
+	}
+
+
+	else if(   dev_obj.sync == false   ){
+
+
+		return dev_obj.listener_function
+
+
+	}
+}
+
 // n_m
 	// safe basic way of doing things no problems
 	//implement expermenting with sucessful code to make it work nicely with system, the desired mode
@@ -63,7 +88,7 @@ module.exports = function(n_m = 'safe',codes,node_mode_needs = 'whole',node_mode
 							var n_m             = n_m.n_m
 							var codes           = n_m.codes
 							var node_mode_needs = n_m.node_mode_needs
-							var node_mode_async = n_m.node_mode_async
+							var node_mode_async = n_m.node_mode_async  //if a boolean make an array and mutliply by length of n_m
 							var node_mode_args  = n_m.node_mode_args
 							  
 							
@@ -72,16 +97,73 @@ module.exports = function(n_m = 'safe',codes,node_mode_needs = 'whole',node_mode
 
 						const node_mode_emitter = new node_mode_Emitter();
 						const node_mode_a_l = node_mode_async_listener()
+						function node_mode_d_g_c(){
+						    // node_mode_d_g_c	 = node_mode_dynamic_group_constructor
+							// console.log(arguments)
+							// console.log(arguments[3][0].toString())
+							// arguments[0][0].toString() is the real listneer
+							var existing_listener = false
+							for( var node_mode_3_i in arguments[2][1]){
 
+
+								if(arguments[0][0].toString() == arguments[2][1][node_mode_3_i]){		        																		
+
+
+									existing_listener = true
+									break;
+
+								} 
+
+
+							}
+
+
+							if(!existing_listener){
+
+								if(!n_m_isStrict()){
+
+
+									console.log('Node Mode Emitter Error, you did not assign the '+arguments[0][0].toString()+' listener to the group ' + arguments[2][2])
+								
+
+								}
+								// console.log(arguments)
+
+								else{
+
+
+									throw new Error('Node Mode Emitter Error, you did not assign the '+arguments[0][0].toString()+' listener to the group ' + arguments[2][2])
+
+
+								}	
+
+							}
+
+
+
+
+							node_mode_emitter.emit(arguments[0][0].toString())		        																
+						}
+						
 
 						if(node_mode_needs == 'whole' && Array.isArray(codes) && node_mode_async && typeof(codes[0]) == 'function' ){
 
 
-							node_mode_emitter.on('safe',       node_mode_a_l(codes[0],'safe emitted'))
-							node_mode_emitter.on('unknown',    node_mode_a_l(codes[1],'unknown emitted'))
-							node_mode_emitter.on('implement',  node_mode_a_l(codes[2],'implement emitted'))
-							node_mode_emitter.on('danger',     node_mode_a_l(codes[3],'danger emitted'))
-							node_mode_emitter.on('prevent',    node_mode_a_l(codes[4],'prevent emitted'))
+							node_mode_emitter.on('safe',       node_mode_a_l(   node_mode_syncify({
+																									listener_function:codes[0],   sync:node_mode_async
+																								  }),'safe emitted'))
+							node_mode_emitter.on('unknown',    node_mode_a_l(   node_mode_syncify({
+																									listener_function:codes[1],   sync:node_mode_async
+																								  }),'unknown emitted'))
+							node_mode_emitter.on('implement',  node_mode_a_l(   node_mode_syncify({
+																									listener_function:codes[2],   sync:node_mode_async
+																								  }),'implement emitted'))
+							node_mode_emitter.on('danger',     node_mode_a_l(   node_mode_syncify({
+																									listener_function:codes[3],   sync:node_mode_async
+																								  }),'danger emitted'))
+							node_mode_emitter.on('prevent',    node_mode_a_l(   node_mode_syncify({
+																									listener_function:codes[4],   sync:node_mode_async
+																								}),'prevent emitted'))
 
 							// node_mode_emitter.on('safe',       codes[0])
 							// node_mode_emitter.on('unknown',    codes[1])
@@ -94,59 +176,20 @@ module.exports = function(n_m = 'safe',codes,node_mode_needs = 'whole',node_mode
 						}
 
 
-						else if(Array.isArray(n_m) && node_mode_needs == 'whole' && Array.isArray(codes) && node_mode_async && typeof(codes[0][0]) == 'string' ){
+						else if(Array.isArray(n_m) && node_mode_needs == 'whole' && Array.isArray(codes) && typeof(codes[0][0]) == 'string' ){
 
 
 							for(var node_mode_1_i in codes){
-								node_mode_emitter.on(codes[node_mode_1_i][0]  ,node_mode_a_l(codes[node_mode_1_i][1],codes[node_mode_1_i][0] + ' emitted'))
+								node_mode_emitter.on(codes[node_mode_1_i][0]  ,node_mode_a_l(   node_mode_syncify({
+														                                                             listener_function:codes[node_mode_1_i][1],
+														                                                             sync:node_mode_async
+									                                                                              }),codes[node_mode_1_i][0] + ' emitted'))
 							}			        				        		
 		        			for(var node_mode_2_i in n_m){
-		        				node_mode_emitter.on(n_m[node_mode_2_i][0], node_mode_a_l(   function(){	
-		        																	// console.log(arguments)
-		        																	// console.log(arguments[3][0].toString())
-		        																	// arguments[0][0].toString() is the real listneer
-		        																	var existing_listener = false
-		        																	for( var node_mode_3_i in arguments[2][1]){
-
-
-		        																		if(arguments[0][0].toString() == arguments[2][1][node_mode_3_i]){		        																		
-
-
-		        																			existing_listener = true
-		        																			break;
-
-		        																		} 
-
-
-		        																	}
-
-
-		        																	if(!existing_listener){
-
-		        																		if(!n_m_isStrict()){
-
-
-		        																			console.log('Node Mode Emitter Error, you did not assign the '+arguments[0][0].toString()+' listener to the group ' + arguments[2][2])
-		        																		
-
-		        																		}
-		        																		// console.log(arguments)
-
-		        																		else{
-
-
-		        																			throw new Error('Node Mode Emitter Error, you did not assign the '+arguments[0][0].toString()+' listener to the group ' + arguments[2][2])
-
-
-		        																		}	
-
-		        																	}
-
-
-
-
-		        																	node_mode_emitter.emit(arguments[0][0].toString())		        																
-        																	},n_m[node_mode_2_i][1],n_m[node_mode_2_i][0]))
+		        				node_mode_emitter.on(n_m[node_mode_2_i][0], node_mode_a_l(   node_mode_syncify({
+		        																								 listener_function:node_mode_d_g_c,
+        																										 sync:node_mode_async
+        																                                       }),n_m[node_mode_2_i][1],n_m[node_mode_2_i][0]))
 		        			}	
 							return node_mode_emitter
 
