@@ -30,6 +30,28 @@ node_mode
 
 	
 	the n_m_group
+
+    template 
+    const _n_m = node_mode(n_m_t_r['_n_m'],[[      
+                                  'A',
+                                  function(){        
+                                        //version or different action A                       
+                                  }],
+                                  ['B',
+                                  function(){
+                                        //version or different action B
+                                  }],  
+                                  ['C',
+                                  function(){
+                                      //version or different action C                                              
+                                  }],                                                                                                          
+                            ]) 
+                     _n_m.emit(A)
+                     //CODE
+                     _n_m.emit(B)
+                     //CODE
+
+                     () => fn(); _n_m.emit(C)       
 		an extension of n_m this puts a name to a mode your code is in so when you emit
 		node_mode.emit('n_m','real_listener')
 		its just like emitting

@@ -16,7 +16,7 @@ function node_mode_syncify(){
 	var dev_obj = arguments[0] 
 
 
-	if(   dev_obj.sync == true   ){
+	if(   dev_obj.sync == 'sync'   ){
 
 
 		return {
@@ -27,7 +27,7 @@ function node_mode_syncify(){
 	}
 
 
-	else if(   dev_obj.sync == false   ){
+	else if(   dev_obj.sync == 'async'   ){
 
 
 		return dev_obj.listener_function
@@ -72,26 +72,32 @@ function node_mode_syncify(){
 	// make n_m a node_mode emitter object manager, so when it sees a string associated with the event you can
 		// use event raw listeners to emit that event also might not work 
 	// implent locally and globally and node_mode_threads object handler
+	// makes sure declarations can be accessed by the calling file making the global to the file
 
 
 
-module.exports = function(n_m = 'safe',codes,node_mode_needs = 'whole',node_mode_async = true,node_mode_args = null){
+module.exports = function(n_m_obj = 'safe',codes,node_mode_needs = 'whole',node_mode_async = 'async',node_mode_args = null){
 						// if this doesnt work change
 						const n_m_isStrict = (function() { 	
 							return !this; 
 						});
 
 
-						if(   typeof(    n_m   ) == "object" && !Array.isArray(   n_m   )   ){
+						if(   typeof(    n_m_obj   ) == "object" && !Array.isArray(   n_m_obj   )   ){
 
 
-							var n_m             = n_m.n_m
-							var codes           = n_m.codes
-							var node_mode_needs = n_m.node_mode_needs
-							var node_mode_async = n_m.node_mode_async  //if a boolean make an array and mutliply by length of n_m
-							var node_mode_args  = n_m.node_mode_args
+							codes           = n_m_obj.codes
+							node_mode_needs = n_m_obj.node_mode_needs == undefined ? node_mode_needs : n_m_obj.node_mode_needs
+							node_mode_async = n_m_obj.node_mode_async == undefined ? node_mode_async : n_m_obj.node_mode_async //if a string make an object and mutliply by length of codes	
+							node_mode_args  = n_m_obj.node_mode_args
+							var n_m             = n_m_obj.n_m              //assign at end or you lose you dev_obj
 							  
 							
+						}
+
+
+						else{
+							var n_m = n_m_obj
 						}						
 
 
@@ -163,13 +169,7 @@ module.exports = function(n_m = 'safe',codes,node_mode_needs = 'whole',node_mode
 																								  }),'danger emitted'))
 							node_mode_emitter.on('prevent',    node_mode_a_l(   node_mode_syncify({
 																									listener_function:codes[4],   sync:node_mode_async
-																								}),'prevent emitted'))
-
-							// node_mode_emitter.on('safe',       codes[0])
-							// node_mode_emitter.on('unknown',    codes[1])
-							// node_mode_emitter.on('implement',  codes[2])
-							// node_mode_emitter.on('danger',     codes[3])
-							// node_mode_emitter.on('prevent',    codes[4])							
+																								}),'prevent emitted'))					
 							return node_mode_emitter
 
 
@@ -179,17 +179,53 @@ module.exports = function(n_m = 'safe',codes,node_mode_needs = 'whole',node_mode
 						else if(Array.isArray(n_m) && node_mode_needs == 'whole' && Array.isArray(codes) && typeof(codes[0][0]) == 'string' ){
 
 
-							for(var node_mode_1_i in codes){
-								node_mode_emitter.on(codes[node_mode_1_i][0]  ,node_mode_a_l(   node_mode_syncify({
-														                                                             listener_function:codes[node_mode_1_i][1],
+							if(   !(   !Array.isArray(   node_mode_async   ) &&  typeof(   node_mode_async   ) =='object'   )   ){
+
+								
+
+								if(   typeof(   node_mode_async   ) == 'string'   ){
+										// a waring if I dont get sync or async
+								}
+
+
+								else if(   typeof(   node_mode_async   ) == null   ){
+
+
+									node_mode_async = 'async'
+
+
+								}
+
+
+								else{
+
+
+									throw new Error(' look at the manual on how to properly register the node_mode_async property it needs an object mapping all the code symbols to "async" or "sync" or use them as simple strings for the whole node_mode_Emitter')
+								
+
+								}	
+								var node_mode_async_holder = node_mode_async
+								node_mode_async = {}							
+								for(   var node_mode_1_i in codes   ){
+									node_mode_async[codes[node_mode_1_i][0]] = node_mode_async_holder
+								}	
+								debugger
+
+
+							}
+
+
+							for(var node_mode_2_i in codes){
+								node_mode_emitter.on(codes[node_mode_2_i][0]  ,node_mode_a_l(   node_mode_syncify({
+														                                                             listener_function:codes[node_mode_2_i][1],
 														                                                             sync:node_mode_async
-									                                                                              }),codes[node_mode_1_i][0] + ' emitted'))
+									                                                                              }),codes[node_mode_2_i][0] + ' emitted'))
 							}			        				        		
-		        			for(var node_mode_2_i in n_m){
-		        				node_mode_emitter.on(n_m[node_mode_2_i][0], node_mode_a_l(   node_mode_syncify({
+		        			for(var node_mode_3_i in n_m){
+		        				node_mode_emitter.on(n_m[node_mode_3_i][0], node_mode_a_l(   node_mode_syncify({
 		        																								 listener_function:node_mode_d_g_c,
         																										 sync:node_mode_async
-        																                                       }),n_m[node_mode_2_i][1],n_m[node_mode_2_i][0]))
+        																                                       }),n_m[node_mode_3_i][1],n_m[node_mode_3_i][0]))
 		        			}	
 							return node_mode_emitter
 
