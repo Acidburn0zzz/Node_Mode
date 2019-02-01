@@ -77,6 +77,20 @@ node_mode
 
 		make sure any node_mode_emitters added to your code update in the list!!!!!!!!!!!!!!!
 
+        if you have an API you can turn it to a function that is aware there are several files using it and it can return the respective threads
+
+
+
+        const node_mode_threads_files = {
+                                "template.js":[
+                                    ['test',      'use_raw'         ],                            
+                                  ] 
+                            }         
+
+        module.exports.node_mode_threads = function(   dev_obj   ){
+                                       return node_mode_threads_files.calling_file 
+                                   }                            
+
         n_m_t_registry
 
         its a localized place where all thread groups for everty node_mode emitter in an API, exists, this simple implementation is optional and can be 
@@ -85,6 +99,15 @@ node_mode
         module.exports.n_m_t_registry = {
                                             node_mode_emitter_name: n_m_group ( refer to above   )
                                         }            
+
+synchronous support
+
+    Future support is coming to specify async or sync for each individual thread but for now if you want async from a node  mode 
+    node_mode_async = true
+    if you want sync from a node mode
+    node_mode_async = false
+
+    This will be dealt with VERY SOON                                         
 
 replace const node_mode_threads to see actions
 dont use setTimeout or setInterval with a node_mode emitter
