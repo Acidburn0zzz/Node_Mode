@@ -61,6 +61,9 @@ function node_mode_syncify(){
 	 //must be an array try to implement with arguments
 	 // args dev wants to provide the  node_mode_emitter
 
+//n_m_g
+	 //everything relating to n_m_g 
+
 //updates
 	//make so that you can add arguments needed for this to work properly so the dev
 	// can declare the emitter and make their code much neater, without just seeing the one times
@@ -76,7 +79,7 @@ function node_mode_syncify(){
 
 
 
-module.exports = function(n_m_obj = 'safe',codes,node_mode_needs = 'whole',node_mode_async = 'async',node_mode_args = null){
+module.exports = function(n_m_obj = 'safe',codes,node_mode_needs = 'whole',node_mode_async = 'sync',node_mode_args = null){
 						// if this doesnt work change
 						const n_m_isStrict = (function() { 	
 							return !this; 
@@ -109,10 +112,10 @@ module.exports = function(n_m_obj = 'safe',codes,node_mode_needs = 'whole',node_
 							// console.log(arguments[3][0].toString())
 							// arguments[0][0].toString() is the real listneer
 							var existing_listener = false
-							for( var node_mode_3_i in arguments[2][1]){
+							for( var node_mode_4_i in arguments[2][1]){
 
 
-								if(arguments[0][0].toString() == arguments[2][1][node_mode_3_i]){		        																		
+								if(arguments[0][0].toString() == arguments[2][1][node_mode_4_i]){		        																		
 
 
 									existing_listener = true
@@ -146,8 +149,8 @@ module.exports = function(n_m_obj = 'safe',codes,node_mode_needs = 'whole',node_
 							}
 
 
-
-
+							console.log('node_mode_d_g_c executed')
+							console.log(arguments[0][0])
 							node_mode_emitter.emit(arguments[0][0].toString())		        																
 						}
 						
@@ -205,27 +208,33 @@ module.exports = function(n_m_obj = 'safe',codes,node_mode_needs = 'whole',node_
 
 								}	
 								var node_mode_async_holder = node_mode_async
-								node_mode_async = {}							
-								for(   var node_mode_1_i in codes   ){
+								node_mode_async = {}				
+								debugger;			
+								for(   var node_mode_1_i = 0; node_mode_1_i!= codes.length; node_mode_1_i++   ){
+									console.log(node_mode_1_i)									
 									node_mode_async[codes[node_mode_1_i][0]] = node_mode_async_holder
 								}	
-								debugger
 
 
 							}
 
 
-							for(var node_mode_2_i in codes){
+							for(   var node_mode_2_i = 0; node_mode_2_i!= codes.length; node_mode_2_i++    ){															
 								node_mode_emitter.on(codes[node_mode_2_i][0]  ,node_mode_a_l(   node_mode_syncify({
 														                                                             listener_function:codes[node_mode_2_i][1],
-														                                                             sync:node_mode_async
+														                                                             sync:node_mode_async[codes[node_mode_2_i][0]]
 									                                                                              }),codes[node_mode_2_i][0] + ' emitted'))
-							}			        				        		
-		        			for(var node_mode_3_i in n_m){
+							}			        				        				        			
+		        			for(   var node_mode_3_i = 0; node_mode_3_i!= n_m.length; node_mode_3_i++   ){
 		        				node_mode_emitter.on(n_m[node_mode_3_i][0], node_mode_a_l(   node_mode_syncify({
 		        																								 listener_function:node_mode_d_g_c,
-        																										 sync:node_mode_async
-        																                                       }),n_m[node_mode_3_i][1],n_m[node_mode_3_i][0]))
+        																										 sync:'async' // this just helps async_listnerer in choosing async or sync, your problem is with the items in the next argument
+        																										 // DONT not change this sync parameter
+        																                                       }),n_m[node_mode_3_i][1],n_m[node_mode_3_i][0],
+		        																								{
+		        																									n_m_g_official:n_m[node_mode_3_i][0],
+		        																									n_m_g_official_coding_map:node_mode_async
+		        																								}))
 		        			}	
 							return node_mode_emitter
 

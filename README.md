@@ -22,16 +22,56 @@ node_mode
 	you have 
 	code.js for [all programming lanaguges] [all OS] ...
 
+    in essence the API uses a list to completely change the project purpose of the code 
+    This is in sense the final form of kubernetes advancement
+    this seamless innovation that considers the low level operation of the compiler is donned the name CHOICE-THREADED programming 
+        with each threads called choice threads
+
 	but this is javascript only the name node mode, work will be implemented for all languages but for now let see how you can boost javascript
 
 	THE NODE MODE OBJECT
 
+    a set of parameters that the node_mode module uses to provide a node_mode_Emitter
+    use the object parameter because there are many values and the module preferrs this
+
+
+    n_m_obj
+    codes
+    node_mode_needs 
+    node_mode_async 
+    node_mode_args 
+
+
+    node_mode_async
+
+        helps the module determine if the choice thread should be called asynchrounously or synchrounously
+            asynchrounously performace is done by wrapping the thread in in a setImmediate(() =>{})
+            evidently since there is process.nextTick and possibly low level runtime options future support will be provided
+
+        template string
+        node_mode_async: 'async' // pos. values 'async' or 'sync'
+        its the 4th argument in the call for a node_mode_Emitter so its better to use the object parameter
+
+
+        object parameter
+        {
+                          node_mode_async:{
+                                  'no_const_fn'      :'sync',
+                                  'const_fn_new_help':'sync',
+                                  'const_fn_unsafe'  :'sync',
+                                  'const_fn_safe'    :'sync',
+                                  'C'                :'async',
+                                  'D'                :'async'
+                              }
+        }
 
 
 	
-	the n_m_group
+	
 
-    template 
+    parameter template 
+        it is recommeded to use the object parameter version, for the future support of seamless additional arguments
+    sample non-object version
     const _n_m = node_mode(n_m_t_r['_n_m'],[[      
                                   'A',
                                   function(){        
@@ -50,14 +90,51 @@ node_mode
                      //CODE
                      _n_m.emit(B)
                      //CODE
+                    () => fn(); _n_m.emit(C) 
 
-                     () => fn(); _n_m.emit(C)       
+
+    sample object parameter version 
+    const _n_m =      node_mode({   
+                          n_m:p_Ev_C_n_m_t_r['p_Ev_C_listen_handle_n_m'],
+                        codes:[      
+                              ['no_const_fn',
+                              function(){        
+                              }],
+                              ['const_fn_new_help',
+                              function(){
+                              }],  
+                              ['const_fn_unsafe',
+                              function(){
+
+                              }],
+                              ['const_fn_safe',
+                              function(){
+                              }],                                                            
+                              ['C',
+                              function(){                                      
+                              }],  
+                              ['D',
+                              function(){                                             
+                              }],
+                              ],
+              node_mode_async:{
+                                  'no_const_fn'      :'sync',
+                                  'const_fn_new_help':'sync',
+                                  'const_fn_unsafe'  :'sync',
+                                  'const_fn_safe'    :'sync',
+                                  'C'                :'async',
+                                  'D'                :'async'
+                              }                                                                                                                                                                 
+                        })     
+
+        the n_m_group
+
 		an extension of n_m this puts a name to a mode your code is in so when you emit
-		node_mode.emit('n_m','real_listener')
+		node_mode.emit('n_m_group','real_listener')
 		its just like emitting
         node_mode.emit('real_listener')
 		it is an array and belongs in the first arg of the node_mode parameter
-		[
+		n_m_group: (for the general node_mode_Emitter)[
 		 ['n_m_group_1',
 		 	['real_listener_1','real_listener_2','real_listener_3','real_listener_4','real_listener_5'],	
 		 ],
@@ -68,6 +145,11 @@ node_mode
 		 	['group','mechanism','attach_you','to','my','emitter']	
 		 ],			 	 
 		]
+
+        and in the parameter to create the node_mode_Emitter 
+
+        n_m_obj:n_m_group
+
 
 		as you can see all you threads that make your software are tied to this simple array, and with grouping concept here
 		it helps erase confusion when you need to switch the mode of your code, i
@@ -110,7 +192,7 @@ node_mode
                             }         
 
         module.exports.node_mode_threads = function(   dev_obj   ){
-                                       return node_mode_threads_files.calling_file 
+                                       return node_mode_threads_files[dev_obj.calling_file] 
                                    }                            
 
         n_m_t_registry
@@ -119,17 +201,12 @@ node_mode
             used to make your code much cleaner 
 
         module.exports.n_m_t_registry = {
-                                            node_mode_emitter_name: n_m_group ( refer to above   )
+                                            node_mode_emitter_name_0: n_m_group_0 ( refer to above   ),
+                                            node_mode_emitter_name_1: n_m_group_1 ( refer to above   ),
+                                            node_mode_emitter_name_2: n_m_group_2 ( refer to above   )
                                         }            
 
-synchronous support
-
-    Future support is coming to specify async or sync for each individual thread but for now if you want async from a node  mode 
-    node_mode_async = true
-    if you want sync from a node mode
-    node_mode_async = false
-
-    This will be dealt with VERY SOON                                         
+                                       
 
 replace const node_mode_threads to see actions
 dont use setTimeout or setInterval with a node_mode emitter
