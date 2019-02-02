@@ -68,6 +68,33 @@ node_mode
         }
 
 
+
+    node_mode_metadata
+
+
+        allows for a custom node_mode_Emitter
+        useful when defaults perform things one way
+            async or sync
+            use file x or file y
+            connect to MongoDB or PostgresSQL (but this should be propsed to the team who made the node_mode_Emitter however I can )
+        SECURITY: there are implemetations to further understand how to properly protect explotation of the n_m_E (node_mode_Emiitters) 
+                    which will be powerful however if this is not to be given any opportunity use the node_mode.js.secure file
+
+         template refer to parameter template, because that is what you are replacing to customize your node_mode_Emitter
+         
+         if a parameter argument is missing then the node_mode_Emiiter will keep its default value for the parameter name  
+
+         refer to the team who made the API that uses node_mode_Emitter on how to properly name the items inside the metadata so if there
+         are several n_m_E (node_mode_Emiitters) in the API they can be routed properly
+
+
+
+
+         node_mode_args 
+            this is when choice threads receieve arguments such as connecting to a certain database or choosing files
+            a template will be given along as full support at a future time
+
+
     custom_dev  
         perform object negotiation with the parameters of the n_m emitter
         implememt custom_dev of there is a permsssion set from node_mode emitter        
