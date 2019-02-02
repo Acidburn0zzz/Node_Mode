@@ -80,9 +80,8 @@ function node_mode_syncify(){
 
 
 
-module.exports = function(n_m_obj = 'safe',codes,node_mode_needs = 'whole',node_mode_async = 'sync',node_mode_args = null,custom_dev = {gen_ans:'no'}, node_mode_metadata){
+module.exports = function(n_m_obj = 'safe',codes,node_mode_needs = 'whole',node_mode_async = 'sync',node_mode_args = null,node_mode_metadata){
 						// if this doesnt work change
-						
 						const n_m_isStrict = (function() { 	
 							return !this; 
 						});
@@ -93,62 +92,18 @@ module.exports = function(n_m_obj = 'safe',codes,node_mode_needs = 'whole',node_
 
 							codes              = n_m_obj.codes
 							node_mode_needs    = n_m_obj.node_mode_needs == undefined ? node_mode_needs : n_m_obj.node_mode_needs
-							node_mode_async    = n_m_obj.node_mode_async == undefined ? node_mode_async : n_m_obj.node_mode_async 
+							node_mode_async    = n_m_obj.node_mode_async == undefined ? node_mode_async : n_m_obj.node_mode_async //if a string make an object and mutliply by length of codes	
 							node_mode_args     = n_m_obj.node_mode_args
 							node_mode_metadata = n_m_obj.node_mode_metadata
-							custom_dev         = n_m_obj.custom_dev      == undefined ? custom_dev       :n_m_obj.custom_dev 
 							var n_m            = n_m_obj.n_m              //assign at end or you lose you dev_obj
 							  
 							
 						}
 
 
-						else if(   !(   typeof(    n_m_obj   ) == "object" && !Array.isArray(   n_m_obj   )   )   ){
-
-
+						else{
 							var n_m = n_m_obj
-
-
 						}						
-
-						if(   node_mode_metadata   != undefined){
-
-
-							if(   (   !Array.isArray(   node_mode_metadata   ) &&  typeof(   node_mode_metadata   ) =='object'   )   ){
-								// perform object negotiation with the parameters of the n_m emitter
-								// implememt custom_dev of there is a permsssion set from node_mode emitter
-
-								if(   custom_dev.gen_ans == 'no'   ){
-									// dont tell the attacker they have to work harder to hack the system
-								}
-
-
-								else if(   custom_dev.gen_ans == 'total'){
-
-
-									codes              = node_mode_metadata.codes               == undefined ? codes            : node_mode_metadata.codes
-									node_mode_needs    = node_mode_metadata.node_mode_needs     == undefined ? node_mode_needs  : node_mode_metadata.node_mode_needs
-									node_mode_async    = node_mode_metadata.node_mode_async     == undefined ? node_mode_async  : node_mode_metadata.node_mode_async 
-									node_mode_args     = node_mode_metadata.node_mode_args      == undefined ? node_mode_args   : node_mode_metadata.node_mode_args
-									// node_mode_metadata = node_mode_metadata.node_mode_metadata  == undefined ? node_mode_metadata  : node_mode_metadata.node_mode_metadata
-									// if quantum phyics I mean async managing mabye
-									custom_dev         = node_mode_metadata.custom_dev          == undefined ? custom_dev       : node_mode_metadata.custom_dev 
-									n_m                = node_mode_metadata.n_m                 == undefined ? n_m              : node_mode_metadata.n_m
-
-								}
-
-
-								else if(   custom_dev.gen_ans == 'negotiate'){
-									// check for spec answer for each paramter, if the object is not there continue
-								}	
-								debugger
-
-							}	
-
-						}					
-
-
-						
 
 
 						const node_mode_emitter = new node_mode_Emitter();
@@ -228,8 +183,7 @@ module.exports = function(n_m_obj = 'safe',codes,node_mode_needs = 'whole',node_
 
 						else if(Array.isArray(n_m) && node_mode_needs == 'whole' && Array.isArray(codes) && typeof(codes[0][0]) == 'string' ){
 
-
-
+							
 							if(   !(   !Array.isArray(   node_mode_async   ) &&  typeof(   node_mode_async   ) =='object'   )   ){
 
 								

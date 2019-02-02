@@ -40,6 +40,8 @@ node_mode
     node_mode_needs 
     node_mode_async 
     node_mode_args 
+    custom_dev
+    node_mode_metadata
 
 
     node_mode_async
@@ -66,7 +68,45 @@ node_mode
         }
 
 
+    custom_dev  
+        perform object negotiation with the parameters of the n_m emitter
+        implememt custom_dev of there is a permsssion set from node_mode emitter        
+
+        template basic
+            {gen_ans:'no'} /default no  values: total ,no, negotiate, token
 	
+        template final
+            {
+                gen_ans:'negotiate',
+                spec_ans:{
+                            codes:           'prevent_remove'
+                            node_mode_needs: 'prevent_append'
+                            node_mode_async: 'allow_append'
+                            node_mode_args : 'allow_remove'
+                            custom_dev     : 'totalbles'
+                            n_m            : 'not_allowable'
+                         },
+                 token: undefined
+            }    
+
+            gen_ans
+                this a general response of what the third party developer user is allowed to change in the object parameters  
+                    no means the values cannot be chaged at all
+                    yes means an unconditional full replacement of the specifc paramenters if there are not undefined in node_mode_metadata
+                    negoitate, performs negotiation  
+                    token, an 0auth of a custom implement token is needed to access, but spec_ans must be even set to make the n_m_E industry grade secure
+
+            spec_ans
+                when gen_ans is negotiate or token negotiation is performed
+                    values are 
+                        prevent_remove: cannot remove specifc indexes from the parameter
+                        prevent_append: cannot add specifc indexes from the parameter
+                        allow_append  : only remove specifc indexes from the parameter
+                        allow_remove  : only add specifc indexes from the parameter
+                        totalbles     : written  for attackers  
+                        not_allowable : rejects any propsed changes                                              
+
+
 	
 
     parameter template 
@@ -180,6 +220,8 @@ node_mode
 		node_mode_emitter.on(    node_mode_threads[group][0], node_mode_threads[event][1],)
 
 		make sure any node_mode_emitters added to your code update in the list!!!!!!!!!!!!!!!
+        also make sure that every real listnerer is actually a function or the internal API will start to break your software
+            it sees an async execution it has to handle but there is no function, so this might be an error that it has to handle 
 
         if you have an API you can turn it to a function that is aware there are several files using it and it can return the respective threads
 
