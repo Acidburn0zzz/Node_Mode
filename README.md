@@ -7,6 +7,9 @@ using node_mode and async_listener bring a new way of coding that makes it power
 
 
 node_mode
+    
+    files: node_mode.js,    node_mode.js.secure,   node_mode_threads.js,    node_mode_threads_README_sample.js
+
 	Node mode is an implenation that I made think of it as an upgrade to the function, where it takes threads as arguments (technically the threads are in a function), but in concept it takes threads
 
 	Node mode is an event emitter, which holds a series of developer created events when emitted execute the thread at that points
@@ -43,6 +46,47 @@ node_mode
     custom_dev
     node_mode_metadata
 
+
+    codes
+        template
+                        codes:{
+                                'no_const_fn':
+                                function(){        
+                                },
+                                'const_fn_new_help':
+                                function(){
+                                },  
+                                'use_class_stable':
+                                function(){
+                                },
+                                'use_setInterval_unstable':
+                                function(){
+
+                              },
+
+                        codes:[      
+                                ['use_raw',
+                                function(){        
+                                }],
+                                ['use_props',
+                                function(){
+                                }],  
+                                ['just_require',
+                                function(){                                                           
+                                }], 
+                                ['add_listener',
+                                function(){                                                                                                                                                                                       
+                                }],  
+                                ['no_metadata',
+                                function(){                                         
+
+                                }]
+                              ]                              
+        the fundamental functionality of node mode these are the actual choice threads
+        developerers use the following parameters to modify how node mode executes the selected choice thread   
+        IT IS HIGHLY RECOMMEDED to use the codes as an object becuase on async execution it does not call a wrap function to async
+            execute the desired function
+            this was due to a mapping problem however both functionalites are provided if desired to perform like this  
 
     node_mode_async
 
@@ -82,7 +126,9 @@ node_mode
 
          template refer to parameter template, because that is what you are replacing to customize your node_mode_Emitter
          
-         if a parameter argument is missing then the node_mode_Emiiter will keep its default value for the parameter name  
+         if a parameter argument is missing then the node_mode_Emiiter will keep its default value for the parameter name 
+
+         becomes a very powerful customization  tool if you understand the internals of the specific n_m_E
 
          refer to the team who made the API that uses node_mode_Emitter on how to properly name the items inside the metadata so if there
          are several n_m_E (node_mode_Emiitters) in the API they can be routed properly
@@ -163,27 +209,20 @@ node_mode
     sample object parameter version 
     const _n_m =      node_mode({   
                           n_m:p_Ev_C_n_m_t_r['p_Ev_C_listen_handle_n_m'],
-                        codes:[      
-                              ['no_const_fn',
-                              function(){        
-                              }],
-                              ['const_fn_new_help',
-                              function(){
-                              }],  
-                              ['const_fn_unsafe',
-                              function(){
+                        codes:{
+                                'no_const_fn':
+                                function(){        
+                                },
+                                'const_fn_new_help':
+                                function(){
+                                },  
+                                'use_class_stable':
+                                function(){
+                                },
+                                'use_setInterval_unstable':
+                                function(){
 
-                              }],
-                              ['const_fn_safe',
-                              function(){
-                              }],                                                            
-                              ['C',
-                              function(){                                      
-                              }],  
-                              ['D',
-                              function(){                                             
-                              }],
-                              ],
+                              },
               node_mode_async:{
                                   'no_const_fn'      :'sync',
                                   'const_fn_new_help':'sync',
@@ -196,7 +235,7 @@ node_mode
 
         the n_m_group
 
-		an extension of n_m this puts a name to a mode your code is in so when you emit
+		an extension of n_m_obj and n_m this puts a name to a mode your code is in so when you emit
 		node_mode.emit('n_m_group','real_listener')
 		its just like emitting
         node_mode.emit('real_listener')

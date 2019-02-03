@@ -141,7 +141,7 @@ module.exports = function(n_m_obj = 'safe',codes,node_mode_needs = 'whole',node_
 								else if(   custom_dev.gen_ans == 'negotiate'){
 									// check for spec answer for each paramter, if the object is not there continue
 								}	
-								debugger
+
 
 							}	
 
@@ -225,7 +225,114 @@ module.exports = function(n_m_obj = 'safe',codes,node_mode_needs = 'whole',node_
 
 						}
 
+						// executes the group and the real listener as one listener trying to remove the use of functions to achieve tasks, lsb of how node_mode works
+						else if(Array.isArray(n_m) && node_mode_needs == 'whole' && (   !Array.isArray(codes) && typeof(   codes   ) == 'object'   )   ){
 
+
+							if(   !(   !Array.isArray(   node_mode_async   ) &&  typeof(   node_mode_async   ) =='object'   )   ){
+
+								
+								if(   typeof(   node_mode_async   ) == 'string'   ){
+										// a waring if I dont get sync or async
+								}
+
+
+								else if(   typeof(   node_mode_async   ) == null   ){
+
+
+									node_mode_async = 'async'
+
+
+								}
+
+
+								else{
+
+
+									throw new Error(' look at the manual on how to properly register the node_mode_async property it needs an object mapping all the code symbols to "async" or "sync" or use them as simple strings for the whole node_mode_Emitter')
+								
+
+								}	
+								var node_mode_async_holder = node_mode_async
+								node_mode_async = {}															
+								for(   var node_mode_1_i = 0; node_mode_1_i!= codes.length; node_mode_1_i++   ){
+									// console.log(node_mode_1_i)	
+									// if memonry leak look here								
+									node_mode_async[codes[node_mode_1_i][0]] = node_mode_async_holder
+								}	
+
+
+							}							
+
+			        				        				        			
+		        			for(   var node_mode_3_i = 0; node_mode_3_i!= n_m.length; node_mode_3_i++   ){	        				
+		        				node_mode_emitter.on(n_m[node_mode_3_i][0],  node_mode_a_l(   node_mode_syncify({
+		        																									listener_function:node_mode_d_g_c,
+        																											sync:'async' // this just helps async_listnerer in choosing async or sync, your problem is with the items in the next argument
+        																											// DONT not change this sync parameter
+        																                                        }),
+		        																								n_m[node_mode_3_i][1],n_m[node_mode_3_i][0],
+		        																								{
+		        																									n_m_g_official:n_m[node_mode_3_i][0],
+		        																									n_m_g_official_coding_map:node_mode_async
+		        																								},
+		        																								codes
+		        																								))
+		        				
+		        			}	
+							return node_mode_emitter
+							// tries to assign a seperate listner for the group and real combo but assings the real amount to the same group chaos now
+							// hopefully someone comes along
+
+		        			for(   var node_mode_3_i = 0; node_mode_3_i!= n_m.length; node_mode_3_i++   ){
+		        				var node_mode_2_i_hold = n_m[node_mode_3_i][1] //the functions you need to tie to the group official
+		        				for(   var node_mode_2_i = 0; node_mode_2_i!= node_mode_2_i_hold.length; node_mode_2_i++    ){
+		        				node_mode_emitter.on(n_m[node_mode_3_i][0], node_mode_a_l(   node_mode_syncify({
+		        																								 listener_function:node_mode_d_g_c,
+        																										 sync:'async' // this just helps async_listnerer in choosing async or sync, your problem is with the items in the next argument
+        																										 // DONT not change this sync parameter
+        																                                       }),n_m[node_mode_3_i][1],n_m[node_mode_3_i][0],
+		        																								{
+		        																									n_m_g_official:n_m[node_mode_3_i][0],
+		        																									n_m_g_official_coding_map:node_mode_async
+		        																								},
+		        																								{
+		        																									real_event    :node_mode_2_i_hold[node_mode_2_i],
+		        																									real_listener :codes[node_mode_2_i_hold[node_mode_2_i]]
+		        																								}
+		        																								))
+		        				}
+		        			}							
+
+
+						}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+						// executes the group and real listener as seperate listeners
 						else if(Array.isArray(n_m) && node_mode_needs == 'whole' && Array.isArray(codes) && typeof(codes[0][0]) == 'string' ){
 
 
