@@ -10,6 +10,25 @@ const circular_replacer = require('./circular_replacer.js')
 // listener function generated args
 // if dealing with circular objects just comment appropirates
 /// l_f_a_args	
+
+
+// listener_function as object
+	// listener_function.sync
+	// when this is not undefined
+		// setImmediate or async does a setImmediate execution
+		// process_nextTick does process.nextTick
+		// set_Timeout does setTimeout
+			// listener_function.timeout_val, the value for the time
+		// sync calls a it reugler
+		// setInteval does setInterval
+			// listener_function.setInterval_val is the value for time, left undefined if the developer was not paying attention
+	// listener_function.sync == undefined executes setImmediate
+
+// listener fucntion as function
+	//executes with setImmediate
+
+
+
 module.exports = function(){
 		return	function(listener_function){	
 							   // l_f_d_args should be an array please if we equate it to 
@@ -66,7 +85,88 @@ module.exports = function(){
 							   			}
 
 
-										if(typeof(listener_function) == 'function'){
+							   			if(   !Array.isArray(listener_function) && typeof(listener_function) == 'object' && listener_function.sync != undefined   ){
+
+
+											if(   l_f_d_args[4]!= undefined   ){
+
+
+												listener_function.listener_function = l_f_d_args[4][l_f_a_args[0]]
+
+
+											}
+
+
+							   				if(   listener_function.sync == 'setImmediate' || listener_function.sync == 'async'){
+
+
+													setImmediate(()=>{
+														// the first arg is the are l_f_g_args
+														// the developers should handle circular objects or
+														// ask for you module in l_f_d_args												
+														listener_function.listener_function(Array.from(l_f_a_args),this,l_f_d_args)											
+													})		
+
+
+							   				}
+
+
+							   				else if(   listener_function.sync == 'process_nextTick'){
+
+
+													process.nextTick(()=>{											
+														listener_function.listener_function(Array.from(l_f_a_args),this,l_f_d_args)											
+													})		
+
+																		   					
+							   				}			
+
+
+							   				else if(   listener_function.sync == 'setTimeout'){
+
+
+							   						if(   listener_function.timeout_val   == undefined){
+
+
+							   							listener_function.timeout_val = 0
+
+
+							   						}
+
+
+													setTimeout(()=>{											
+														listener_function.listener_function(Array.from(l_f_a_args),this,l_f_d_args)											
+													},listener_function.timeout_val)		
+
+																		   					
+							   				}	
+
+							   				else if(   listener_function.sync == 'setInterval'){
+
+
+													setInterval(()=>{											
+														listener_function.listener_function(Array.from(l_f_a_args),this,l_f_d_args)											
+													},listener_function.setInterval_val)		
+
+																		   					
+							   				}							   				
+
+
+							   				else if(   listener_function.sync == 'sync'){
+
+											
+														listener_function.listener_function(Array.from(l_f_a_args),this,l_f_d_args)											
+															
+																		   					
+							   				}
+
+
+							   			}
+
+
+
+
+										else if(typeof(listener_function) == 'function'){
 
 
 											if(   l_f_d_args[4]!= undefined   ){
@@ -83,29 +183,6 @@ module.exports = function(){
 												// the developers should handle circular objects or
 												// ask for you module in l_f_d_args												
 												listener_function(Array.from(l_f_a_args),this,l_f_d_args)											
-											})
-
-
-										}
-
-
-										if(   Array.isArray(listener_function) && typeof(listener_function) == 'object'   ){
-
-
-											if(   l_f_d_args[4]!= undefined   ){
-
-
-												listener_function[0] = l_f_d_args[4][l_f_a_args[0]]
-
-
-											}
-
-											
-											process.nextTick(()=>{
-												// the first arg is the are l_f_g_args
-												// the developers should handle circular objects or
-												// ask for you module in l_f_d_args												
-												listener_function[0](Array.from(l_f_a_args),this,l_f_d_args)											
 											})
 
 
